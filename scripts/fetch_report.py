@@ -16,6 +16,10 @@ from zoneinfo import ZoneInfo
 import requests
 
 ROOT = Path(__file__).resolve().parent.parent
+# 저장소 이름이 바뀌면 이 값도 같이 바꿔주세요 (계정명/저장소명)
+REPO_SLUG = "dhur3/daily-briefing"
+# GitHub Pages 주소의 기본 경로 (예: https://dhur3.github.io/daily-briefing/ -> /daily-briefing/)
+PAGES_BASE = "/" + REPO_SLUG.split("/", 1)[1] + "/"
 DOCS = ROOT / "docs"
 ARCHIVE = DOCS / "archive"
 KST = ZoneInfo("Asia/Seoul")
@@ -23,6 +27,7 @@ KST = ZoneInfo("Asia/Seoul")
 NAVER_CLIENT_ID = os.environ.get("NAVER_CLIENT_ID", "")
 NAVER_CLIENT_SECRET = os.environ.get("NAVER_CLIENT_SECRET", "")
 DART_API_KEY = os.environ.get("DART_API_KEY", "")
+ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 GMAIL_ADDRESS = os.environ.get("GMAIL_ADDRESS", "")
 GMAIL_APP_PASSWORD = os.environ.get("GMAIL_APP_PASSWORD", "")
 TO_EMAIL = os.environ.get("TO_EMAIL", "")
@@ -135,6 +140,52 @@ def fetch_disclosures(keyword, today_str):
     return results
 
 
+def generate_daily_report(keyword, news, disclosures):
+    # Anthropic API로 오늘 수집된 원문을 종합해 5~8문장 요약을 만듭니다.
+    # ANTHROPIC_API_KEY가 없으면 요약 없이 안내 문구만 반환합니다 (기능 선택 사용).
+    if not ANTHROPIC_API_KEY:
+        return None
+    items = news + disclosures
+    if not items:
+        return "오늘 수집된 뉴스·공시가 없어 요약할 내용이 없습니다."
+
+    listing = "\n".join(
+        f"- [{'공시' if it in disclosures else '뉴스'}] {it['title']}: {it['summary']} ({it['source']}, {it['date']})"
+        for it in items
+    )
+    prompt = (
+        f'아래는 "{keyword}" 키워드로 오늘 수집된 뉴스·공시 원문 목록이야. '
+        "이 내용을 근거로 한국어 데일리 브리핑을 작성해줘. 5~8문장 정도로, "
+        "오늘 이 키워드와 관련해 어떤 흐름/이슈가 있었는지 자연스럽게 정리해줘. "
+        "목록에 없는 내용은 지어내지 말고, 다른 설명이나 머리말 없이 본문만 출력해:\n\n"
+        f"{listing}"
+    )
+    try:
+        r = requests.post(
+            "https://api.anthropic.com/v1/messages",
+            headers={
+                "x-api-key": ANTHROPIC_API_KEY,
+                "anthropic-version": "2023-06-01",
+                "content-type": "application/json",
+            },
+            json={
+                "model": "claude-haiku-4-5-20251001",
+                "max_tokens": 700,
+                "messages": [{"role": "user", "content": prompt}],
+            },
+            timeout=30,
+        )
+        r.raise_for_status()
+        data = r.json()
+        text = "".join(
+            block.get("text", "") for block in data.get("content", []) if block.get("type") == "text"
+        ).strip()
+        return text or "요약을 생성하지 못했습니다."
+    except Exception as e:
+        print(f"[ai-summary] {keyword} 요약 실패: {e}")
+        return "요약 생성 중 오류가 발생했습니다."
+
+
 def build_report(today_str):
     with open(ROOT / "keywords.json", encoding="utf-8") as f:
         keywords = json.load(f)["keywords"]
@@ -143,7 +194,12 @@ def build_report(today_str):
     for kw in keywords:
         news = fetch_news(kw, today_str)
         disclosures = fetch_disclosures(kw, today_str)
-        report["keywords"][kw] = {"news": news, "disclosures": disclosures}
+        daily_report = generate_daily_report(kw, news, disclosures)
+        report["keywords"][kw] = {
+            "news": news,
+            "disclosures": disclosures,
+            "daily_report": daily_report,
+        }
     return report
 
 
@@ -163,10 +219,19 @@ h1 {{ font-size: 24px; border-bottom: 2px solid #EDE7D8; padding-bottom: 12px; m
 .search-row {{ margin-bottom: 22px; }}
 .search-row input {{ width:100%; box-sizing:border-box; background:#16232E; border:1px solid rgba(237,231,216,0.2);
   color:#EDE7D8; padding:10px 12px; border-radius:6px; font-size:14px; }}
+.kw-manage {{ display:flex; gap:8px; margin-bottom: 26px; flex-wrap:wrap; }}
+.kw-manage input {{ flex:1; min-width:160px; background:#16232E; border:1px solid rgba(237,231,216,0.2);
+  color:#EDE7D8; padding:9px 12px; border-radius:6px; font-size:13.5px; }}
+.kw-manage button {{ border:none; border-radius:6px; padding:9px 14px; font-size:13px; cursor:pointer; }}
+.kw-manage .add-btn {{ background:#5B8DBE; color:#16232E; }}
+.kw-manage .remove-btn {{ background: transparent; border:1px solid rgba(237,231,216,0.3); color:#EDE7D8; }}
+.kw-manage-note {{ font-size:11.5px; color:#5F5E5A; margin: -18px 0 24px; }}
 .view-toggle {{ display:flex; gap:8px; margin: 6px 0 18px; }}
 .view-toggle button {{ background: transparent; border:1px solid rgba(237,231,216,0.25); color:#93A4AF;
   padding:6px 12px; border-radius:14px; font-size:12.5px; cursor:pointer; }}
 .view-toggle button.active {{ color:#EDE7D8; border-color:#5B8DBE; }}
+.report-box {{ background: rgba(201,154,61,0.1); border-left:3px solid #C99A3D; padding:16px 18px;
+  font-size:14.5px; line-height:1.8; white-space:pre-wrap; }}
 .summary-list {{ list-style:none; padding:0; margin:0; }}
 .summary-list li {{ padding:9px 0; border-top:1px solid rgba(237,231,216,0.1); font-size:13.5px; }}
 .summary-list .tag {{ display:inline-block; width:34px; font-size:10.5px; color:#16232E; text-align:center;
@@ -186,6 +251,8 @@ h1 {{ font-size: 24px; border-bottom: 2px solid #EDE7D8; padding-bottom: 12px; m
 .empty {{ color:#93A4AF; font-size:14px; }}
 .archive {{ margin-top:40px; font-size:13px; color:#93A4AF; }}
 .archive a {{ color:#5B8DBE; margin-right:10px; }}
+.archive select {{ background:#16232E; color:#EDE7D8; border:1px solid rgba(237,231,216,0.25);
+  border-radius:6px; padding:6px 10px; font-size:13px; }}
 .tab-panel {{ display:none; }}
 .tab-panel.active {{ display:block; }}
 </style>
@@ -194,9 +261,20 @@ h1 {{ font-size: 24px; border-bottom: 2px solid #EDE7D8; padding-bottom: 12px; m
 <div class="desk">
   <h1>데일리 브리핑 데스크 — {date}</h1>
   <div class="tabs">{tab_buttons}</div>
+  <div class="kw-manage">
+    <input id="kw-input" placeholder="키워드 입력 (예: 삼성전자)">
+    <button class="add-btn" onclick="requestKeyword('add')">추가 요청</button>
+    <button class="remove-btn" onclick="requestKeyword('remove')">삭제 요청</button>
+  </div>
+  <p class="kw-manage-note">버튼을 누르면 GitHub 이슈 작성 화면이 열립니다. 거기서 "Submit new issue"만 누르면 자동으로 반영돼요 (GitHub 로그인 필요).</p>
   <div class="search-row"><input id="search" placeholder="제목으로 검색..." oninput="filterItems()"></div>
   {panels}
-  <div class="archive">지난 리포트: {archive_links}</div>
+  <div class="archive">
+    <label for="dateSelect">날짜 선택: </label>
+    <select id="dateSelect" onchange="if(this.value) window.location.href = this.value;">
+      {date_options}
+    </select>
+  </div>
 </div>
 <script>
 function showTab(kw) {{
@@ -210,6 +288,7 @@ function showView(kw, view) {{
   panel.querySelectorAll('.view-toggle button').forEach(b => b.classList.toggle('active', b.dataset.view === view));
   panel.querySelector('.summary-view').style.display = view === 'summary' ? 'block' : 'none';
   panel.querySelector('.full-view').style.display = view === 'full' ? 'block' : 'none';
+  panel.querySelector('.report-view').style.display = view === 'report' ? 'block' : 'none';
 }}
 function filterItems() {{
   const q = document.getElementById('search').value.trim().toLowerCase();
@@ -217,6 +296,13 @@ function filterItems() {{
     const match = el.dataset.title.toLowerCase().includes(q);
     el.style.display = match ? '' : 'none';
   }});
+}}
+function requestKeyword(action) {{
+  const kw = document.getElementById('kw-input').value.trim();
+  if (!kw) {{ alert('키워드를 입력해주세요.'); return; }}
+  const title = encodeURIComponent(action + ': ' + kw);
+  const url = 'https://github.com/{repo_slug}/issues/new?title=' + title;
+  window.open(url, '_blank');
 }}
 </script>
 </body>
@@ -278,11 +364,24 @@ def render_page(report, archive_dates):
             + [{**it, "_kind": "disclosure"} for it in data["disclosures"]]
         )
 
+        daily_report = data.get("daily_report")
+        if daily_report:
+            report_html = f'<div class="report-box">{daily_report}</div>'
+        else:
+            report_html = (
+                '<p class="empty">데일리 리포트(AI 요약)를 쓰려면 저장소 Secrets에 '
+                'ANTHROPIC_API_KEY를 등록해주세요.</p>'
+            )
+
         panels.append(f"""
         <div class="tab-panel {active}" data-kw="{kw}">
           <div class="view-toggle">
+            <button data-view="report" onclick="showView('{kw}','report')">데일리 리포트</button>
             <button class="active" data-view="summary" onclick="showView('{kw}','summary')">간단 요약 보기</button>
             <button data-view="full" onclick="showView('{kw}','full')">전체 원문 목록</button>
+          </div>
+          <div class="report-view" style="display:none">
+            {report_html}
           </div>
           <div class="summary-view">
             {render_summary_list(all_items, "오늘 수집된 내용이 없습니다.")}
@@ -294,14 +393,20 @@ def render_page(report, archive_dates):
         </div>
         """)
 
-    archive_links = " ".join(
-        f'<a href="archive/{d}.html">{d}</a>' for d in archive_dates
-    ) or "-"
+    today_option = f'<option value="{PAGES_BASE}index.html">오늘 · {report["date"]}</option>'
+    past_options = "".join(
+        f'<option value="{PAGES_BASE}archive/{d}.html">{d}</option>'
+        for d in archive_dates
+        if d != report["date"]
+    )
+    date_options = today_option + past_options
+
     return PAGE_TEMPLATE.format(
         date=report["date"],
         tab_buttons="".join(tab_buttons),
         panels="".join(panels),
-        archive_links=archive_links,
+        date_options=date_options,
+        repo_slug=REPO_SLUG,
     )
 
 
@@ -342,10 +447,10 @@ def main():
     DOCS.mkdir(exist_ok=True)
     ARCHIVE.mkdir(exist_ok=True)
 
-    # 지난 리포트 목록 (최근 것부터, 최대 14개만 링크에 노출)
+    # 지난 리포트 날짜 전체 목록 (드롭다운에 다 넣어도 가벼워서 개수 제한 없음)
     existing = sorted(
-        [p.stem for p in ARCHIVE.glob("*.html")], reverse=True
-    )[:14]
+        [p.stem for p in ARCHIVE.glob("*.html") if p.stem != today_str], reverse=True
+    )
 
     page = render_page(report, existing)
     (DOCS / "index.html").write_text(page, encoding="utf-8")
