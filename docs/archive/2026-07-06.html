@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>데일리 브리핑 데스크 — 2026-07-06</title>
+<title>오늘의 부동산 뉴스 — 2026-07-06</title>
 <style>
 body { margin:0; background:#101B24; color:#EDE7D8; font-family: sans-serif; }
 .desk { max-width: 900px; margin: 0 auto; padding: 30px 20px 60px; }
@@ -14,10 +14,19 @@ h1 { font-size: 24px; border-bottom: 2px solid #EDE7D8; padding-bottom: 12px; ma
 .search-row { margin-bottom: 22px; }
 .search-row input { width:100%; box-sizing:border-box; background:#16232E; border:1px solid rgba(237,231,216,0.2);
   color:#EDE7D8; padding:10px 12px; border-radius:6px; font-size:14px; }
+.kw-manage { display:flex; gap:8px; margin-bottom: 26px; flex-wrap:wrap; }
+.kw-manage input { flex:1; min-width:160px; background:#16232E; border:1px solid rgba(237,231,216,0.2);
+  color:#EDE7D8; padding:9px 12px; border-radius:6px; font-size:13.5px; }
+.kw-manage button { border:none; border-radius:6px; padding:9px 14px; font-size:13px; cursor:pointer; }
+.kw-manage .add-btn { background:#5B8DBE; color:#16232E; }
+.kw-manage .remove-btn { background: transparent; border:1px solid rgba(237,231,216,0.3); color:#EDE7D8; }
+.kw-manage-note { font-size:11.5px; color:#5F5E5A; margin: -18px 0 24px; }
 .view-toggle { display:flex; gap:8px; margin: 6px 0 18px; }
 .view-toggle button { background: transparent; border:1px solid rgba(237,231,216,0.25); color:#93A4AF;
   padding:6px 12px; border-radius:14px; font-size:12.5px; cursor:pointer; }
 .view-toggle button.active { color:#EDE7D8; border-color:#5B8DBE; }
+.report-box { background: rgba(201,154,61,0.1); border-left:3px solid #C99A3D; padding:16px 18px;
+  font-size:14.5px; line-height:1.8; white-space:pre-wrap; }
 .summary-list { list-style:none; padding:0; margin:0; }
 .summary-list li { padding:9px 0; border-top:1px solid rgba(237,231,216,0.1); font-size:13.5px; }
 .summary-list .tag { display:inline-block; width:34px; font-size:10.5px; color:#16232E; text-align:center;
@@ -37,352 +46,364 @@ h1 { font-size: 24px; border-bottom: 2px solid #EDE7D8; padding-bottom: 12px; ma
 .empty { color:#93A4AF; font-size:14px; }
 .archive { margin-top:40px; font-size:13px; color:#93A4AF; }
 .archive a { color:#5B8DBE; margin-right:10px; }
+.archive select { background:#16232E; color:#EDE7D8; border:1px solid rgba(237,231,216,0.25);
+  border-radius:6px; padding:6px 10px; font-size:13px; }
 .tab-panel { display:none; }
 .tab-panel.active { display:block; }
 </style>
 </head>
 <body>
 <div class="desk">
-  <h1>데일리 브리핑 데스크 — 2026-07-06</h1>
+  <h1>오늘의 부동산 뉴스 — 2026-07-06</h1>
   <div class="tabs"><button class="tab-btn active" data-kw="부동산" onclick="showTab(this.dataset.kw)">부동산</button></div>
+  <div class="kw-manage">
+    <input id="kw-input" placeholder="키워드 입력 (예: 삼성전자)">
+    <button class="add-btn" onclick="requestKeyword('add')">추가 요청</button>
+    <button class="remove-btn" onclick="requestKeyword('remove')">삭제 요청</button>
+  </div>
+  <p class="kw-manage-note">버튼을 누르면 GitHub 이슈 작성 화면이 열립니다. 거기서 "Submit new issue"만 누르면 자동으로 반영돼요 (GitHub 로그인 필요).</p>
   <div class="search-row"><input id="search" placeholder="제목으로 검색..." oninput="filterItems()"></div>
   
         <div class="tab-panel active" data-kw="부동산">
           <div class="view-toggle">
+            <button data-view="report" onclick="showView('부동산','report')">데일리 리포트</button>
             <button class="active" data-view="summary" onclick="showView('부동산','summary')">간단 요약 보기</button>
             <button data-view="full" onclick="showView('부동산','full')">전체 원문 목록</button>
           </div>
+          <div class="report-view" style="display:none">
+            <p class="empty">데일리 리포트(AI 요약)를 쓰려면 저장소 Secrets에 ANTHROPIC_API_KEY를 등록해주세요.</p>
+          </div>
           <div class="summary-view">
-            <ul class="summary-list"><li data-title="수원시, 자체 개발 조사기법으로 숨은 세원 21억 원 발굴"><span class="tag news">뉴스</span><a href="https://www.shinailbo.co.kr/news/articleView.html?idxno=5037991" target="_blank">수원시, 자체 개발 조사기법으로 숨은 세원 21억 원 발굴</a></li><li data-title="[중부안테나] 강훈식 비서실장 &quot;충청 반도체 투자 부지 다음 회의서 점..."><span class="tag news">뉴스</span><a href="https://www.jbnews.com/news/articleView.html?idxno=1507142" target="_blank">[중부안테나] 강훈식 비서실장 "충청 반도체 투자 부지 다음 회의서 점...</a></li><li data-title="KB증권, IMA 자본 충전…강진두號 IB 회복 시험대"><span class="tag news">뉴스</span><a href="https://www.ddaily.co.kr/page/view/2026070613555959373" target="_blank">KB증권, IMA 자본 충전…강진두號 IB 회복 시험대</a></li><li data-title="반도체 클러스터 '광주 군공항' 확정…靑, 초고속 낙점 배경은"><span class="tag news">뉴스</span><a href="https://www.mt.co.kr/politics/2026/07/06/2026070614572719463" target="_blank">반도체 클러스터 '광주 군공항' 확정…靑, 초고속 낙점 배경은</a></li><li data-title="광주 군공항에 250만평 반도체 클러스터 조성…메가프로젝트 본격화"><span class="tag news">뉴스</span><a href="http://www.issuenbiz.com/news/articleView.html?idxno=77697" target="_blank">광주 군공항에 250만평 반도체 클러스터 조성…메가프로젝트 본격화</a></li><li data-title="썬푸꾸옥항공, 8월 25일부터 인천-하노이·호치민 신규 직항 노선 취항"><span class="tag news">뉴스</span><a href="http://www.ttlnews.com/news/articleView.html?idxno=3122994" target="_blank">썬푸꾸옥항공, 8월 25일부터 인천-하노이·호치민 신규 직항 노선 취항</a></li><li data-title="삼성전자 '무풍 에어컨' 앞세워 글로벌 공조시장 공략"><span class="tag news">뉴스</span><a href="http://www.jndn.com/article.php?aid=1783322097435552004" target="_blank">삼성전자 '무풍 에어컨' 앞세워 글로벌 공조시장 공략</a></li><li data-title="재산 형성·유지 기여도가 중요"><span class="tag news">뉴스</span><a href="http://www.jndn.com/article.php?aid=1783322064435549230" target="_blank">재산 형성·유지 기여도가 중요</a></li><li data-title="[삼촌설] '세일 앤 리스백' 약탈 경영"><span class="tag news">뉴스</span><a href="https://www.kyongbuk.co.kr/news/articleView.html?idxno=4077494" target="_blank">[삼촌설] '세일 앤 리스백' 약탈 경영</a></li><li data-title="앞으로 공실 상가·오피스 등 ‘비주거시설 주거 전환 사업’도 HUG 모기..."><span class="tag news">뉴스</span><a href="https://www.viva100.com/article/20260706501118" target="_blank">앞으로 공실 상가·오피스 등 ‘비주거시설 주거 전환 사업’도 HUG 모기...</a></li><li data-title="호남 반도체 투자 발표 1주일 만에 부지 결정…'속전속결'"><span class="tag news">뉴스</span><a href="https://www.yna.co.kr/view/AKR20260706118400054?input=1195m" target="_blank">호남 반도체 투자 발표 1주일 만에 부지 결정…'속전속결'</a></li><li data-title="신한자산운용, ETF·TDF로 노후자산 불려주고 모험자본으로 혁신기업 성..."><span class="tag news">뉴스</span><a href="https://www.hankyung.com/article/2026070672171" target="_blank">신한자산운용, ETF·TDF로 노후자산 불려주고 모험자본으로 혁신기업 성...</a></li><li data-title="경남 소상공인 경기전망 '먹구름'…장마·폭염에 매출 감소 우려"><span class="tag news">뉴스</span><a href="https://www.idomin.com/news/articleView.html?idxno=2009443" target="_blank">경남 소상공인 경기전망 '먹구름'…장마·폭염에 매출 감소 우려</a></li><li data-title="LH 이성훈 &quot;주택 공급 혁신 전력질주..국민이 먼저 찾는 집으로&quot;"><span class="tag news">뉴스</span><a href="http://www.4th.kr/news/articleView.html?idxno=2114302" target="_blank">LH 이성훈 "주택 공급 혁신 전력질주..국민이 먼저 찾는 집으로"</a></li><li data-title="“평균보다 싼 고가주택”…“철 지난 12억 세법 잣대 수술 필요”"><span class="tag news">뉴스</span><a href="https://www.dt.co.kr/article/12071389?ref=naver" target="_blank">“평균보다 싼 고가주택”…“철 지난 12억 세법 잣대 수술 필요”</a></li><li data-title="강훈식 &quot;장애인 특공 악용 엄정조치&quot;…청약취소·형사처벌 지시"><span class="tag news">뉴스</span><a href="http://www.fnnews.com/news/202607061607379562" target="_blank">강훈식 "장애인 특공 악용 엄정조치"…청약취소·형사처벌 지시</a></li><li data-title="강훈식 “장애인·국가유공자 특별공급 조직적 범죄 악용…매우 심각한..."><span class="tag news">뉴스</span><a href="https://biz.heraldcorp.com/article/10799732?ref=naver" target="_blank">강훈식 “장애인·국가유공자 특별공급 조직적 범죄 악용…매우 심각한...</a></li><li data-title="원석학원 파산선고...신경주대·신라고 운명 갈림길, 충효동 경제도 긴..."><span class="tag news">뉴스</span><a href="https://www.hidomin.com/news/articleView.html?idxno=712148" target="_blank">원석학원 파산선고...신경주대·신라고 운명 갈림길, 충효동 경제도 긴...</a></li><li data-title="장애인·국가유공자 명의로 불법 분양…강훈식, 특별공급 점검·개선 주..."><span class="tag news">뉴스</span><a href="https://news.tf.co.kr/read/ptoday/2340231.htm" target="_blank">장애인·국가유공자 명의로 불법 분양…강훈식, 특별공급 점검·개선 주...</a></li><li data-title="이성훈 LH사장 취임 “집 투기 대상 아냐…주택 공급에 모든 역량 집중..."><span class="tag news">뉴스</span><a href="https://www.khan.co.kr/article/202607061614001" target="_blank">이성훈 LH사장 취임 “집 투기 대상 아냐…주택 공급에 모든 역량 집중...</a></li><li data-title="금융지주, 증권사 키우기 '속도'···자본확충 경쟁 본격화"><span class="tag news">뉴스</span><a href="https://www.seoulfn.com/news/articleView.html?idxno=632761" target="_blank">금융지주, 증권사 키우기 '속도'···자본확충 경쟁 본격화</a></li><li data-title="이성훈 LH 신임 사장 &quot;집은 공공재&quot;… 주택공급 속도·품질 혁신 선언"><span class="tag news">뉴스</span><a href="http://www.biztribune.co.kr/news/articleView.html?idxno=355570" target="_blank">이성훈 LH 신임 사장 "집은 공공재"… 주택공급 속도·품질 혁신 선언</a></li><li data-title="[건설사 점검] [우미건설] 미래 신사업 총대 3세 이승훈 '역할론' 부상"><span class="tag news">뉴스</span><a href="https://www.topdaily.kr/articles/110845" target="_blank">[건설사 점검] [우미건설] 미래 신사업 총대 3세 이승훈 '역할론' 부상</a></li><li data-title="우리은행, 조직개편 당일 정보유출 공개 … 정진완 행장 연임 '악재'"><span class="tag news">뉴스</span><a href="https://www.safetimes.co.kr/news/articleView.html?idxno=243956" target="_blank">우리은행, 조직개편 당일 정보유출 공개 … 정진완 행장 연임 '악재'</a></li><li data-title="주택공급 '속도' 강조한 LH 이성훈 &quot;전력질주해야&quot;"><span class="tag news">뉴스</span><a href="https://news.bizwatch.co.kr/article/real_estate/2026/07/06/0017" target="_blank">주택공급 '속도' 강조한 LH 이성훈 "전력질주해야"</a></li><li data-title="[단독] 30년 멈춘 복현SKY 다시 움직인다…노유자시설 전환 추진"><span class="tag news">뉴스</span><a href="https://www.idaegu.com/news/articleView.html?idxno=664125" target="_blank">[단독] 30년 멈춘 복현SKY 다시 움직인다…노유자시설 전환 추진</a></li><li data-title="2027년 입주물량 역대 최저···인허가·착공도 감소세"><span class="tag news">뉴스</span><a href="https://www.ziksir.com/news/articleView.html?idxno=139223" target="_blank">2027년 입주물량 역대 최저···인허가·착공도 감소세</a></li><li data-title="LH 신임 사장 이성훈 취임일성으로 빠른 주택공급 강조, &quot;집은 삶을 지탱..."><span class="tag news">뉴스</span><a href="https://www.businesspost.co.kr/BP?command=article_view&num=441648" target="_blank">LH 신임 사장 이성훈 취임일성으로 빠른 주택공급 강조, "집은 삶을 지탱...</a></li><li data-title="망해가는 지방백화점… 현대백화점이 던진 생존경쟁, 울산 동구점 쇼핑..."><span class="tag news">뉴스</span><a href="https://www.donga.com/news/Economy/article/all/20260706/134245077/1" target="_blank">망해가는 지방백화점… 현대백화점이 던진 생존경쟁, 울산 동구점 쇼핑...</a></li><li data-title="강훈식, 장애인 특공 부정청약에 &quot;매우 심각한 문제…제도 전반 점검&quot;"><span class="tag news">뉴스</span><a href="https://www.news1.kr/politics/president/6219174" target="_blank">강훈식, 장애인 특공 부정청약에 "매우 심각한 문제…제도 전반 점검"</a></li></ul>
+            <ul class="summary-list"><li data-title="신길뉴타운에 '써밋 클라비온' 공급 예정"><span class="tag news">뉴스</span><a href="https://edu.donga.com/news/articleView.html?idxno=109665" target="_blank">신길뉴타운에 '써밋 클라비온' 공급 예정</a></li><li data-title="[김광현의 기업살롱] 중앙그룹 계열사들 이어 연 8% 넘는 고금리 신종자..."><span class="tag news">뉴스</span><a href="http://www.nongaek.com/news/articleView.html?idxno=95988" target="_blank">[김광현의 기업살롱] 중앙그룹 계열사들 이어 연 8% 넘는 고금리 신종자...</a></li><li data-title="韓 '삼전닉스'?...中증시, AI·반도체 만 잘나가"><span class="tag news">뉴스</span><a href="https://biz.sbs.co.kr/article_hub/20000320917?division=NAVER" target="_blank">韓 '삼전닉스'?...中증시, AI·반도체 만 잘나가</a></li><li data-title="박영사 『LH 민간 신축 매입약정사업 실무 바이블』출간"><span class="tag news">뉴스</span><a href="https://www.handmk.com/news/articleView.html?idxno=41088" target="_blank">박영사 『LH 민간 신축 매입약정사업 실무 바이블』출간</a></li><li data-title="&quot;3대 메가 프로젝트, 대통령 주재로 매달 회의…다음 회의서 영남·충청..."><span class="tag news">뉴스</span><a href="https://www.kbsm.net/news/view.php?idx=525743" target="_blank">"3대 메가 프로젝트, 대통령 주재로 매달 회의…다음 회의서 영남·충청...</a></li><li data-title="KB손보, 자립준비청년 대상 홀로서기 맟춤 금융교육 강화"><span class="tag news">뉴스</span><a href="https://www.joongangenews.com/news/articleView.html?idxno=530802" target="_blank">KB손보, 자립준비청년 대상 홀로서기 맟춤 금융교육 강화</a></li><li data-title="한국투자공사, 일본 도쿄지사 출범"><span class="tag news">뉴스</span><a href="https://www.dnews.co.kr/uhtml/view.jsp?idxno=202607061631502810140" target="_blank">한국투자공사, 일본 도쿄지사 출범</a></li><li data-title="노후아파트 증가에...일상생활 보험금 75%가 ‘누수 보상’"><span class="tag news">뉴스</span><a href="https://www.sedaily.com/article/20064321?ref=naver" target="_blank">노후아파트 증가에...일상생활 보험금 75%가 ‘누수 보상’</a></li><li data-title="코스피, 8000선 지키며 하락 마감… 내일 삼전 실적 발표에 반등?"><span class="tag news">뉴스</span><a href="https://www.mt.co.kr/stock/2026/07/06/2026070616025665905" target="_blank">코스피, 8000선 지키며 하락 마감… 내일 삼전 실적 발표에 반등?</a></li><li data-title="HUG, 7월 미분양관리지역 4곳 지정...양주 재지정·대전 해제"><span class="tag news">뉴스</span><a href="https://www.g-enews.com/view.php?ud=202607061328342778a9fc143920_1" target="_blank">HUG, 7월 미분양관리지역 4곳 지정...양주 재지정·대전 해제</a></li><li data-title="한국토지신탁, 3대 신평사서 신용등급 ‘A- 안정적’ 유지"><span class="tag news">뉴스</span><a href="https://www.dt.co.kr/article/12071410?ref=naver" target="_blank">한국토지신탁, 3대 신평사서 신용등급 ‘A- 안정적’ 유지</a></li><li data-title="서울 아파트 84㎡ 전세, 신규·갱신 8천만 원 격차"><span class="tag news">뉴스</span><a href="https://news.skbroadband.com/news/articleView.html?idxno=231274" target="_blank">서울 아파트 84㎡ 전세, 신규·갱신 8천만 원 격차</a></li><li data-title="사각지대 파헤치는 '수원형 빌드체크 기법'...21억5천만원 세금 찾아내"><span class="tag news">뉴스</span><a href="https://news.ifm.kr/news/articleView.html?idxno=474475" target="_blank">사각지대 파헤치는 '수원형 빌드체크 기법'...21억5천만원 세금 찾아내</a></li><li data-title="[기자수첩] 홈플러스가 파산해도, 책임은 파산해선 안된다"><span class="tag news">뉴스</span><a href="https://news.mtn.co.kr/news-detail/2026070616112742493" target="_blank">[기자수첩] 홈플러스가 파산해도, 책임은 파산해선 안된다</a></li><li data-title="강훈식 “청약자격 위조 철저히 조사…특별공급 공정성 확립해야”"><span class="tag news">뉴스</span><a href="https://news.kbs.co.kr/news/pc/view/view.do?ncd=8603167&ref=A" target="_blank">강훈식 “청약자격 위조 철저히 조사…특별공급 공정성 확립해야”</a></li><li data-title="LH 이성훈 사장 공식 취임…“도심 주택공급 속도 과감히 높일 것”"><span class="tag news">뉴스</span><a href="https://www.news2day.co.kr/article/20260706500138" target="_blank">LH 이성훈 사장 공식 취임…“도심 주택공급 속도 과감히 높일 것”</a></li><li data-title="이성훈 LH 사장 취임…&quot;국민이 기다리는 좋은 집 빠르게 공급&quot;"><span class="tag news">뉴스</span><a href="https://www.shinailbo.co.kr/news/articleView.html?idxno=5037983" target="_blank">이성훈 LH 사장 취임…"국민이 기다리는 좋은 집 빠르게 공급"</a></li><li data-title="[퇴근길 7분 뉴스] 광주군공항·24시간외환거래·정유사담합·한화오션"><span class="tag news">뉴스</span><a href="https://news.dealsitetv.com/articles/172890" target="_blank">[퇴근길 7분 뉴스] 광주군공항·24시간외환거래·정유사담합·한화오션</a></li><li data-title="우리자산신탁, 취약계층 주거환경 개선 완료... 'With우리 하우징 프로젝..."><span class="tag news">뉴스</span><a href="http://www.thefirstmedia.net/news/articleView.html?idxno=203128" target="_blank">우리자산신탁, 취약계층 주거환경 개선 완료... 'With우리 하우징 프로젝...</a></li><li data-title="건전성 입증한 SBI저축은행... 한신평도 기업신용등급 'A' 유지"><span class="tag news">뉴스</span><a href="http://www.thefirstmedia.net/news/articleView.html?idxno=203117" target="_blank">건전성 입증한 SBI저축은행... 한신평도 기업신용등급 'A' 유지</a></li><li data-title="'탈서울' 60%는 경기도 선택…인천도 13만명 유입"><span class="tag news">뉴스</span><a href="https://www.kgnews.co.kr/news/article.html?no=902820" target="_blank">'탈서울' 60%는 경기도 선택…인천도 13만명 유입</a></li><li data-title="&quot;거래대금 폭발에 돈방석 앉았다&quot;···증권사 2분기 순익 141% 급증, '역..."><span class="tag news">뉴스</span><a href="https://www.smartbizn.com/news/articleView.html?idxno=147876" target="_blank">"거래대금 폭발에 돈방석 앉았다"···증권사 2분기 순익 141% 급증, '역...</a></li><li data-title="'이중가격' 덫 걸린 서울 전세시장…신규·재계약 격차 최대 8000만원"><span class="tag news">뉴스</span><a href="http://www.inews24.com/view/1982851" target="_blank">'이중가격' 덫 걸린 서울 전세시장…신규·재계약 격차 최대 8000만원</a></li><li data-title="[기자의 눈] 반복되는 '규제-공급-규제'...다음에 묶을 지역은 어디"><span class="tag news">뉴스</span><a href="https://www.news2day.co.kr/article/20260706500132" target="_blank">[기자의 눈] 반복되는 '규제-공급-규제'...다음에 묶을 지역은 어디</a></li><li data-title="이성훈 LH 신임 사장 &quot;신속한 주택공급 역점&quot;"><span class="tag news">뉴스</span><a href="https://www.idomin.com/news/articleView.html?idxno=2009449" target="_blank">이성훈 LH 신임 사장 "신속한 주택공급 역점"</a></li><li data-title="中증시도 AI·반도체만 잘나가…산업 양극화 보여주는 축소판"><span class="tag news">뉴스</span><a href="https://www.yna.co.kr/view/AKR20260706121200009?input=1195m" target="_blank">中증시도 AI·반도체만 잘나가…산업 양극화 보여주는 축소판</a></li><li data-title="10억 찍은 아파트도 6억대 급매…동탄 집주인들 규제 전날 '막차 행렬'"><span class="tag news">뉴스</span><a href="https://www.mt.co.kr/estate/2026/07/06/2026070615335425107" target="_blank">10억 찍은 아파트도 6억대 급매…동탄 집주인들 규제 전날 '막차 행렬'</a></li><li data-title="&quot;강원·전북에선 좀 더 특별한 산업적 실험 해볼 필요 있어&quot;"><span class="tag news">뉴스</span><a href="https://www.ohmynews.com/NWS_Web/View/at_pg.aspx?CNTN_CD=A0003248766&CMPT_CD=P0010&utm_source=naver&utm_medium=newsearch&utm_campaign=naver_news" target="_blank">"강원·전북에선 좀 더 특별한 산업적 실험 해볼 필요 있어"</a></li><li data-title="고양 삼송 AI DC에...은행권 1.1조 PF"><span class="tag news">뉴스</span><a href="https://www.sedaily.com/article/20064315?ref=naver" target="_blank">고양 삼송 AI DC에...은행권 1.1조 PF</a></li><li data-title="강훈식 &quot;아파트 특별공급 제도 전반 점검·개선…공정성 확립&quot;"><span class="tag news">뉴스</span><a href="https://www.yna.co.kr/view/AKR20260706124300001?input=1195m" target="_blank">강훈식 "아파트 특별공급 제도 전반 점검·개선…공정성 확립"</a></li></ul>
           </div>
           <div class="full-view" style="display:none">
             
-            <div class="dispatch" data-title="수원시, 자체 개발 조사기법으로 숨은 세원 21억 원 발굴">
+            <div class="dispatch" data-title="신길뉴타운에 '써밋 클라비온' 공급 예정">
               <div class="stamp news">뉴스</div>
               <div class="d-body">
-                <p class="d-title">수원시, 자체 개발 조사기법으로 숨은 세원 21억 원 발굴</p>
-                <p class="d-summary">시는 최근 부동산 거래 위축으로 정기 세무조사 실적이 감소하자 탈루 가능성이 높은 분야를 선별해 집중... 대상으로 부동산 변동 내역을 시점별로 추적·분석하는 방식이다. 시는 21개 법인을 대상으로 정밀 조사를...</p>
-                <div class="d-meta">네이버뉴스 · 2026-07-06 16:22
-                  <a href="https://www.shinailbo.co.kr/news/articleView.html?idxno=5037991" target="_blank">원문 보기</a>
+                <p class="d-title">신길뉴타운에 '써밋 클라비온' 공급 예정</p>
+                <p class="d-summary">한국부동산원 청약홈 자료를 바탕으로 한 업계 분석에 따르면, 2025년 1월부터 2026년 4월 중순까지 공급된 하이엔드 브랜드 아파트의 평균 청약경쟁률은 일반 브랜드 아파트보다 높게 나타났다. 다만 하이엔드 브랜드의...</p>
+                <div class="d-meta">네이버뉴스 · 2026-07-06 16:44
+                  <a href="https://edu.donga.com/news/articleView.html?idxno=109665" target="_blank">원문 보기</a>
                 </div>
               </div>
             </div>
             
-            <div class="dispatch" data-title="[중부안테나] 강훈식 비서실장 &quot;충청 반도체 투자 부지 다음 회의서 점...">
+            <div class="dispatch" data-title="[김광현의 기업살롱] 중앙그룹 계열사들 이어 연 8% 넘는 고금리 신종자...">
               <div class="stamp news">뉴스</div>
               <div class="d-body">
-                <p class="d-title">[중부안테나] 강훈식 비서실장 "충청 반도체 투자 부지 다음 회의서 점...</p>
-                <p class="d-summary">강 실장은 "(호남)광주지역에 (반도체 부지)지역을 먼저 선정하는 게 시급했던 지점은 부동산이 들썩거린다라는 여러 가지 보고가 있기 때문"이라면서 "빨리 부지를 확정 해야지만 이게 불필요한 논란과 확대가 되지 않을...</p>
-                <div class="d-meta">네이버뉴스 · 2026-07-06 16:22
-                  <a href="https://www.jbnews.com/news/articleView.html?idxno=1507142" target="_blank">원문 보기</a>
+                <p class="d-title">[김광현의 기업살롱] 중앙그룹 계열사들 이어 연 8% 넘는 고금리 신종자...</p>
+                <p class="d-summary">6일 금융감독원 전자공시시스템에 따르면 BS그룹 소속 부동산신탁회사 코리아신탁은 지난 달 26일자로 제1회... 코리아신탁의 작년 별도기준 재무상태표 및 손익계산서 일부 코리아신탁은 다른 부동산신탁사들처럼...</p>
+                <div class="d-meta">네이버뉴스 · 2026-07-06 16:44
+                  <a href="http://www.nongaek.com/news/articleView.html?idxno=95988" target="_blank">원문 보기</a>
                 </div>
               </div>
             </div>
             
-            <div class="dispatch" data-title="KB증권, IMA 자본 충전…강진두號 IB 회복 시험대">
+            <div class="dispatch" data-title="韓 '삼전닉스'?...中증시, AI·반도체 만 잘나가">
               <div class="stamp news">뉴스</div>
               <div class="d-body">
-                <p class="d-title">KB증권, IMA 자본 충전…강진두號 IB 회복 시험대</p>
-                <p class="d-summary">부동산금융 조직을 줄이고 기업금융과 생산적 금융 중심으로 조직을 바꿨다. 부동산 업황 부진에 따른 리스크를 줄이고 전통 IB 경쟁력을 키우겠다는 취지다. 금융투자업계 관계자는 “IMA는 한국판 골드만삭스를...</p>
-                <div class="d-meta">네이버뉴스 · 2026-07-06 16:22
-                  <a href="https://www.ddaily.co.kr/page/view/2026070613555959373" target="_blank">원문 보기</a>
+                <p class="d-title">韓 '삼전닉스'?...中증시, AI·반도체 만 잘나가</p>
+                <p class="d-summary">첨단 제조업은 호조인 반면 소비와 부동산 등 전통 부문은 부진한 흐름이 주식시장에서도 고스란히... 부동산 경기 침체에서 비롯된 내수 부진을 타개할 정부 차원의 확실한 경기부양책이 부족하다는 지적도 나옵니다....</p>
+                <div class="d-meta">네이버뉴스 · 2026-07-06 16:44
+                  <a href="https://biz.sbs.co.kr/article_hub/20000320917?division=NAVER" target="_blank">원문 보기</a>
                 </div>
               </div>
             </div>
             
-            <div class="dispatch" data-title="반도체 클러스터 '광주 군공항' 확정…靑, 초고속 낙점 배경은">
+            <div class="dispatch" data-title="박영사 『LH 민간 신축 매입약정사업 실무 바이블』출간">
               <div class="stamp news">뉴스</div>
               <div class="d-body">
-                <p class="d-title">반도체 클러스터 '광주 군공항' 확정…靑, 초고속 낙점 배경은</p>
-                <p class="d-summary">강 실장은 "군 공항은 국유지인 만큼 토지 수용 관련 리스크가 많이 없을 것이라고 본다"며 "(호남권) 부동산 가격이 들썩인다는 보고가 있었는데 빨리 부지가 확정돼야 불필요한 논란이 확대되지 않을 것으로 봤다"고...</p>
-                <div class="d-meta">네이버뉴스 · 2026-07-06 16:21
-                  <a href="https://www.mt.co.kr/politics/2026/07/06/2026070614572719463" target="_blank">원문 보기</a>
+                <p class="d-title">박영사 『LH 민간 신축 매입약정사업 실무 바이블』출간</p>
+                <p class="d-summary">저자는 "이 책을 초보 사업자뿐 아니라 시행사와 시공사, 건축사, 부동산 전문가, 공공기관 실무자 등이 참고할 수 있는 실무 자료로 활용할 수 있도록 구성했다"고 설명했다. 이어 "민간 신축 매입약정사업의 절차와 제도...</p>
+                <div class="d-meta">네이버뉴스 · 2026-07-06 16:42
+                  <a href="https://www.handmk.com/news/articleView.html?idxno=41088" target="_blank">원문 보기</a>
                 </div>
               </div>
             </div>
             
-            <div class="dispatch" data-title="광주 군공항에 250만평 반도체 클러스터 조성…메가프로젝트 본격화">
+            <div class="dispatch" data-title="&quot;3대 메가 프로젝트, 대통령 주재로 매달 회의…다음 회의서 영남·충청...">
               <div class="stamp news">뉴스</div>
               <div class="d-body">
-                <p class="d-title">광주 군공항에 250만평 반도체 클러스터 조성…메가프로젝트 본격화</p>
-                <p class="d-summary">정부는 최근 호남권 반도체 클러스터 조성 계획이 발표된 이후 후보지 주변 부동산 시장이 과열되는 조짐을 보인 점도 신속한 부지 선정의 배경 가운데 하나라고 설명했다. 광주 군공항 이전 문제에 대해서는 안보 공백이...</p>
-                <div class="d-meta">네이버뉴스 · 2026-07-06 16:20
-                  <a href="http://www.issuenbiz.com/news/articleView.html?idxno=77697" target="_blank">원문 보기</a>
+                <p class="d-title">"3대 메가 프로젝트, 대통령 주재로 매달 회의…다음 회의서 영남·충청...</p>
+                <p class="d-summary">여기에 호남권 클러스터 조성 사업이 공식화된 뒤 해당 지역의 부동산 가격이 불안정해지는 듯한 조짐을 보이는 것 역시 빠른 부지 선정의 배경이 된 것으로 보인다. 현재의 광주 군 공항을 이전하는 문제에 대해서는 "안보...</p>
+                <div class="d-meta">네이버뉴스 · 2026-07-06 16:42
+                  <a href="https://www.kbsm.net/news/view.php?idx=525743" target="_blank">원문 보기</a>
                 </div>
               </div>
             </div>
             
-            <div class="dispatch" data-title="썬푸꾸옥항공, 8월 25일부터 인천-하노이·호치민 신규 직항 노선 취항">
+            <div class="dispatch" data-title="KB손보, 자립준비청년 대상 홀로서기 맟춤 금융교육 강화">
               <div class="stamp news">뉴스</div>
               <div class="d-body">
-                <p class="d-title">썬푸꾸옥항공, 8월 25일부터 인천-하노이·호치민 신규 직항 노선 취항</p>
-                <p class="d-summary">베트남 최대 관광·부동산 재벌 기업인 썬그룹 계열의 신생 항공사 썬푸꾸옥항공(Sun PhuQuoc Airways, SPA)이 한국 노선 운항을 확장한다. 썬푸꾸옥항공은 8월 25일부터 인천국제공항과 베트남의 양대 거점 도시인 하노이 및...</p>
-                <div class="d-meta">네이버뉴스 · 2026-07-06 16:20
-                  <a href="http://www.ttlnews.com/news/articleView.html?idxno=3122994" target="_blank">원문 보기</a>
+                <p class="d-title">KB손보, 자립준비청년 대상 홀로서기 맟춤 금융교육 강화</p>
+                <p class="d-summary">활용법, 부동산 전월세 계약 시 보증금 보호 대책 등 다방면에 걸쳐 깊은 관심을 표명했다. 아울러 KB손보는... 최근 사회적 문제가 된 전세사기를 미연에 방지할 수 있는 예방법과 부동산 계약 시 반드시 확인해야 할 필수...</p>
+                <div class="d-meta">네이버뉴스 · 2026-07-06 16:42
+                  <a href="https://www.joongangenews.com/news/articleView.html?idxno=530802" target="_blank">원문 보기</a>
                 </div>
               </div>
             </div>
             
-            <div class="dispatch" data-title="삼성전자 '무풍 에어컨' 앞세워 글로벌 공조시장 공략">
+            <div class="dispatch" data-title="한국투자공사, 일본 도쿄지사 출범">
               <div class="stamp news">뉴스</div>
               <div class="d-body">
-                <p class="d-title">삼성전자 '무풍 에어컨' 앞세워 글로벌 공조시장 공략</p>
-                <p class="d-summary">베트남에서는 대형 부동산 개발사와 협력해 호찌민 신도시 주거단지 약 3,000세대에 무풍 에어컨을 공급하고 있으며 파라과이에서는 초고층 복합시설에 1,000대 이상의 실내기를 납품할 예정이다. 인도 시장 공략도...</p>
-                <div class="d-meta">네이버뉴스 · 2026-07-06 16:18
-                  <a href="http://www.jndn.com/article.php?aid=1783322097435552004" target="_blank">원문 보기</a>
+                <p class="d-title">한국투자공사, 일본 도쿄지사 출범</p>
+                <p class="d-summary">도쿄지사는 주식ㆍ채권 등 전통자산과 사모주식ㆍ부동산 등 대체자산을 아우르는 투자 거점으로 운영된다. 도쿄지사는 뉴욕(2010년), 런던(2011년), 싱가포르(2017년) 지사와 샌프란시스코(2021년), 뭄바이(2024년)...</p>
+                <div class="d-meta">네이버뉴스 · 2026-07-06 16:40
+                  <a href="https://www.dnews.co.kr/uhtml/view.jsp?idxno=202607061631502810140" target="_blank">원문 보기</a>
                 </div>
               </div>
             </div>
             
-            <div class="dispatch" data-title="재산 형성·유지 기여도가 중요">
+            <div class="dispatch" data-title="노후아파트 증가에...일상생활 보험금 75%가 ‘누수 보상’">
               <div class="stamp news">뉴스</div>
               <div class="d-body">
-                <p class="d-title">재산 형성·유지 기여도가 중요</p>
-                <p class="d-summary">부동산 등기부등본, 대출 내역, 통장 거래내역, 보험, 퇴직금, 주식, 차량, 사업체 관련 자료 등을 확인해야 한다. 상대방이 재산을 숨기거나 처분할 우려가 있다면 재산명시·재산조회 제도, 금융거래정보 제출명령, 가압류...</p>
-                <div class="d-meta">네이버뉴스 · 2026-07-06 16:18
-                  <a href="http://www.jndn.com/article.php?aid=1783322064435549230" target="_blank">원문 보기</a>
+                <p class="d-title">노후아파트 증가에...일상생활 보험금 75%가 ‘누수 보상’</p>
+                <p class="d-summary">부동산R114에 따르면 지난달 12일 기준 전국 아파트 가운데 준공 20년 이상 노후 아파트는 652만 2360가구로 전체의 56.7%를 차지했다. 수도권도 전체의 56.8%인 320만 703가구가 준공 20년을 넘긴 것으로 조사됐다. 아파트 2채...</p>
+                <div class="d-meta">네이버뉴스 · 2026-07-06 16:40
+                  <a href="https://www.sedaily.com/article/20064321?ref=naver" target="_blank">원문 보기</a>
                 </div>
               </div>
             </div>
             
-            <div class="dispatch" data-title="[삼촌설] '세일 앤 리스백' 약탈 경영">
+            <div class="dispatch" data-title="코스피, 8000선 지키며 하락 마감… 내일 삼전 실적 발표에 반등?">
               <div class="stamp news">뉴스</div>
               <div class="d-body">
-                <p class="d-title">[삼촌설] '세일 앤 리스백' 약탈 경영</p>
-                <p class="d-summary">기업이 보유한 부동산을 매각한 뒤 다시 임차해 사용하는 방식이다. 본래는 일시적인 유동성을 확보하기 위한 금융기법이지만, 잘못 사용되면 기업의 미래를 담보로 현금을 끌어다 쓰는 도구가 된다. MBK는 홈플러스...</p>
-                <div class="d-meta">네이버뉴스 · 2026-07-06 16:18
-                  <a href="https://www.kyongbuk.co.kr/news/articleView.html?idxno=4077494" target="_blank">원문 보기</a>
+                <p class="d-title">코스피, 8000선 지키며 하락 마감… 내일 삼전 실적 발표에 반등?</p>
+                <p class="d-summary">비금속, 부동산, 섬유·의류는 1%대 올랐다. 전기·가스, 운송장비·부품, 보험, 오락·문화는 2% 이상 상승했다. 증권은 3% 이상 뛰었다. 코스피 시가총액 상위 종목 중 삼성전기가 8%대 급락했다. 이날 이수페타시스와...</p>
+                <div class="d-meta">네이버뉴스 · 2026-07-06 16:39
+                  <a href="https://www.mt.co.kr/stock/2026/07/06/2026070616025665905" target="_blank">원문 보기</a>
                 </div>
               </div>
             </div>
             
-            <div class="dispatch" data-title="앞으로 공실 상가·오피스 등 ‘비주거시설 주거 전환 사업’도 HUG 모기...">
+            <div class="dispatch" data-title="HUG, 7월 미분양관리지역 4곳 지정...양주 재지정·대전 해제">
               <div class="stamp news">뉴스</div>
               <div class="d-body">
-                <p class="d-title">앞으로 공실 상가·오피스 등 ‘비주거시설 주거 전환 사업’도 HUG 모기...</p>
-                <p class="d-summary">당시 정부는 2022년부터 이어진 부동산 프로젝트파이낸싱(PF) 위기와 건설공사비 상승으로 주택 착공이 크게 감소하면서 향후 공급 부족 우려가 커졌다고 진단했다. 이에 아파트 공급만으로는 단기간 도심 주거 수요에...</p>
-                <div class="d-meta">네이버뉴스 · 2026-07-06 16:18
-                  <a href="https://www.viva100.com/article/20260706501118" target="_blank">원문 보기</a>
+                <p class="d-title">HUG, 7월 미분양관리지역 4곳 지정...양주 재지정·대전 해제</p>
+                <p class="d-summary">주택 공급 과잉과 청약 시장 위축으로 인한 지역별 부동산 경기 양극화가 지속되는 가운데, 주택도시보증공사(HUG)가 올해 7월 서민 주거 안정과 주택시장 리스크 관리를 위한 고강도 모니터터링 구역을 확정했다....</p>
+                <div class="d-meta">네이버뉴스 · 2026-07-06 16:38
+                  <a href="https://www.g-enews.com/view.php?ud=202607061328342778a9fc143920_1" target="_blank">원문 보기</a>
                 </div>
               </div>
             </div>
             
-            <div class="dispatch" data-title="호남 반도체 투자 발표 1주일 만에 부지 결정…'속전속결'">
+            <div class="dispatch" data-title="한국토지신탁, 3대 신평사서 신용등급 ‘A- 안정적’ 유지">
               <div class="stamp news">뉴스</div>
               <div class="d-body">
-                <p class="d-title">호남 반도체 투자 발표 1주일 만에 부지 결정…'속전속결'</p>
-                <p class="d-summary">지역에서는 군공항을 유력하게 보면서도 여러 후보지별 장단점, 부동산 등 경기 영향에 대한 분석이 쏟아졌다. 그러나 청와대는 '추측의 시간'을 오래 두지 않았다. 전남광주 한 지자체 관계자는 "막연하게 '반도체 특별법...</p>
-                <div class="d-meta">네이버뉴스 · 2026-07-06 16:17
-                  <a href="https://www.yna.co.kr/view/AKR20260706118400054?input=1195m" target="_blank">원문 보기</a>
+                <p class="d-title">한국토지신탁, 3대 신평사서 신용등급 ‘A- 안정적’ 유지</p>
+                <p class="d-summary">부동산신탁업계가 책임준공 미이행과 대손 부담 확대로 재무 건전성 관리에 어려움을 겪는 가운데 거둔 성과라고 회사 측은 강조했다. 한국토지신탁은 상대적으로 위험도가 높은 사업은 선별적으로 수주하고...</p>
+                <div class="d-meta">네이버뉴스 · 2026-07-06 16:38
+                  <a href="https://www.dt.co.kr/article/12071410?ref=naver" target="_blank">원문 보기</a>
                 </div>
               </div>
             </div>
             
-            <div class="dispatch" data-title="신한자산운용, ETF·TDF로 노후자산 불려주고 모험자본으로 혁신기업 성...">
+            <div class="dispatch" data-title="서울 아파트 84㎡ 전세, 신규·갱신 8천만 원 격차">
               <div class="stamp news">뉴스</div>
               <div class="d-body">
-                <p class="d-title">신한자산운용, ETF·TDF로 노후자산 불려주고 모험자본으로 혁신기업 성...</p>
-                <p class="d-summary">이 사업은 부동산 경기 둔화와 공사비 상승 등으로 한때 중단 위기를 겪었다. 신한자산운용은 프로젝트금융투자회사(PFV) 설립부터 사업 구조 재편, 본 PF 1400억원 금융 주선까지 맡으며 사업 재개를 이끌었다. 핵심은...</p>
-                <div class="d-meta">네이버뉴스 · 2026-07-06 16:16
-                  <a href="https://www.hankyung.com/article/2026070672171" target="_blank">원문 보기</a>
+                <p class="d-title">서울 아파트 84㎡ 전세, 신규·갱신 8천만 원 격차</p>
+                <p class="d-summary">부동산 전문 업체 직방이 올해 1월부터 6월까지 수도권 아파트 전세 거래를 분석한 결과 서울 전용면적 84㎡ 규모의 신규 계약과 갱신 계약 전세보증금 차액이 8천만 원으로 83% 상승했습니다. 신규 계약...</p>
+                <div class="d-meta">네이버뉴스 · 2026-07-06 16:38
+                  <a href="https://news.skbroadband.com/news/articleView.html?idxno=231274" target="_blank">원문 보기</a>
                 </div>
               </div>
             </div>
             
-            <div class="dispatch" data-title="경남 소상공인 경기전망 '먹구름'…장마·폭염에 매출 감소 우려">
+            <div class="dispatch" data-title="사각지대 파헤치는 '수원형 빌드체크 기법'...21억5천만원 세금 찾아내">
               <div class="stamp news">뉴스</div>
               <div class="d-body">
-                <p class="d-title">경남 소상공인 경기전망 '먹구름'…장마·폭염에 매출 감소 우려</p>
-                <p class="d-summary">업종별로는 부동산업과 교육서비스업을 제외한 제조업, 소매업 등 대부분 업종에서 경기 전망이 악화했다. 전통시장 상황은 더 나빴다. 경남 전통시장의 7월 전망 BSI는 66.7로 전월(85.7)보다 19.0p 하락해 전국...</p>
-                <div class="d-meta">네이버뉴스 · 2026-07-06 16:16
-                  <a href="https://www.idomin.com/news/articleView.html?idxno=2009443" target="_blank">원문 보기</a>
+                <p class="d-title">사각지대 파헤치는 '수원형 빌드체크 기법'...21억5천만원 세금 찾아내</p>
+                <p class="d-summary">수원시 법인조사팀은 최근 부동산 거래 위축 등으로 정기 세무조사 실적이 감소하자, '중점 세무조사' 방법을... 21개 법인의 부동산 변동 내역을 시점별로 추적하고, 검토한 뒤 관련 시스템을 연계해 단계별 검증으로 탈루...</p>
+                <div class="d-meta">네이버뉴스 · 2026-07-06 16:36
+                  <a href="https://news.ifm.kr/news/articleView.html?idxno=474475" target="_blank">원문 보기</a>
                 </div>
               </div>
             </div>
             
-            <div class="dispatch" data-title="LH 이성훈 &quot;주택 공급 혁신 전력질주..국민이 먼저 찾는 집으로&quot;">
+            <div class="dispatch" data-title="[기자수첩] 홈플러스가 파산해도, 책임은 파산해선 안된다">
               <div class="stamp news">뉴스</div>
               <div class="d-body">
-                <p class="d-title">LH 이성훈 "주택 공급 혁신 전력질주..국민이 먼저 찾는 집으로"</p>
-                <p class="d-summary">이 사장은 대통령비서실 국토교통비서관으로 현 정부의 부동산·국토교통 정책을 조율했으며 국토교통부 정책기획관, 경기도 건설국장 등을 지냈다. 이달 3일 LH 사장으로 임명됐으며 임기는 2029년 7월까지다.</p>
-                <div class="d-meta">네이버뉴스 · 2026-07-06 16:16
-                  <a href="http://www.4th.kr/news/articleView.html?idxno=2114302" target="_blank">원문 보기</a>
+                <p class="d-title">[기자수첩] 홈플러스가 파산해도, 책임은 파산해선 안된다</p>
+                <p class="d-summary">지난 2015년 수조원의 빚을 내 홈플러스를 인수한 뒤 핵심 점포 매각과 부동산 자산 처분 등을 통해 이익... 더욱이 홈플러스가 파산할 경우 1조5600억원 규모의 부동산 담보권을 보장받는 1순위 신탁담보권자다. 추가...</p>
+                <div class="d-meta">네이버뉴스 · 2026-07-06 16:36
+                  <a href="https://news.mtn.co.kr/news-detail/2026070616112742493" target="_blank">원문 보기</a>
                 </div>
               </div>
             </div>
             
-            <div class="dispatch" data-title="“평균보다 싼 고가주택”…“철 지난 12억 세법 잣대 수술 필요”">
+            <div class="dispatch" data-title="강훈식 “청약자격 위조 철저히 조사…특별공급 공정성 확립해야”">
               <div class="stamp news">뉴스</div>
               <div class="d-body">
-                <p class="d-title">“평균보다 싼 고가주택”…“철 지난 12억 세법 잣대 수술 필요”</p>
-                <p class="d-summary">“종합부동산세 낼 때는 공시가 12억원 안 넘는다고 서민이라더니, 집 팔 때는 실거래가 12억원 넘었다고... 서울의 웬만한 국민평형(전용 84㎡) 아파트도 20억원을 넘기는 상황에서 정부가 부동산 세금을 매길 때...</p>
-                <div class="d-meta">네이버뉴스 · 2026-07-06 16:16
-                  <a href="https://www.dt.co.kr/article/12071389?ref=naver" target="_blank">원문 보기</a>
+                <p class="d-title">강훈식 “청약자격 위조 철저히 조사…특별공급 공정성 확립해야”</p>
+                <p class="d-summary">강훈식 대통령 비서실장은 “부동산 청약 자격 위조 등 불법 행위를 더욱 철저히 조사하라”고 각 비서관에게 당부했습니다. 안귀령 청와대 부대변인은 오늘(6일) 강 실장이 수석보좌관회의를 주재하고, 최근 청각장애인...</p>
+                <div class="d-meta">네이버뉴스 · 2026-07-06 16:35
+                  <a href="https://news.kbs.co.kr/news/pc/view/view.do?ncd=8603167&ref=A" target="_blank">원문 보기</a>
                 </div>
               </div>
             </div>
             
-            <div class="dispatch" data-title="강훈식 &quot;장애인 특공 악용 엄정조치&quot;…청약취소·형사처벌 지시">
+            <div class="dispatch" data-title="LH 이성훈 사장 공식 취임…“도심 주택공급 속도 과감히 높일 것”">
               <div class="stamp news">뉴스</div>
               <div class="d-body">
-                <p class="d-title">강훈식 "장애인 특공 악용 엄정조치"…청약취소·형사처벌 지시</p>
-                <p class="d-summary">강 실장은 국토교통부와 국무조정실, 경찰청 등 관계부처에 부동산 청약 자격 위조 등 불법행위를 철저히 조사하라고 주문했다. 적발된 위법 사례에는 청약 취소와 형사처벌 등 엄정 조치를 통해 특별공급 제도의 공정성을...</p>
-                <div class="d-meta">네이버뉴스 · 2026-07-06 16:15
-                  <a href="http://www.fnnews.com/news/202607061607379562" target="_blank">원문 보기</a>
+                <p class="d-title">LH 이성훈 사장 공식 취임…“도심 주택공급 속도 과감히 높일 것”</p>
+                <p class="d-summary">이 사장은 국토교통부 정책기획관과 경기도 건설국장을 거쳐 대통령비서실에서 현 정부의 부동산 정책을 총괄 조율해 온 인물이다. 현장과 정책 전반을 두루 경험한 만큼, 공급 정체 해소 등 산적한 주거 안정 과제를...</p>
+                <div class="d-meta">네이버뉴스 · 2026-07-06 16:34
+                  <a href="https://www.news2day.co.kr/article/20260706500138" target="_blank">원문 보기</a>
                 </div>
               </div>
             </div>
             
-            <div class="dispatch" data-title="강훈식 “장애인·국가유공자 특별공급 조직적 범죄 악용…매우 심각한...">
+            <div class="dispatch" data-title="이성훈 LH 사장 취임…&quot;국민이 기다리는 좋은 집 빠르게 공급&quot;">
               <div class="stamp news">뉴스</div>
               <div class="d-body">
-                <p class="d-title">강훈식 “장애인·국가유공자 특별공급 조직적 범죄 악용…매우 심각한...</p>
-                <p class="d-summary">강 실장은 또 “국토교통부와 국무조정실, 경찰청 등 관계 부처는 부동산 청약 자격 위조 등 불법행위를 더욱 철저히 조사하고, 적발된 위법 사례에 대해서는 청약 취소와 형사처벌 등 엄정한 조치를 통해 특별공급 제도의...</p>
-                <div class="d-meta">네이버뉴스 · 2026-07-06 16:15
-                  <a href="https://biz.heraldcorp.com/article/10799732?ref=naver" target="_blank">원문 보기</a>
+                <p class="d-title">이성훈 LH 사장 취임…"국민이 기다리는 좋은 집 빠르게 공급"</p>
+                <p class="d-summary">이 사장은 대통령비서실 국토교통비서관으로 재직하며 현 정부의 주요 부동산 정책을 총괄 조율해 왔으며 국토교통부 정책기획관과 경기도 건설국장 등을 지낸 바 있다. 임기는 오는 2029년 7월까지다. 이 사장은 이날...</p>
+                <div class="d-meta">네이버뉴스 · 2026-07-06 16:34
+                  <a href="https://www.shinailbo.co.kr/news/articleView.html?idxno=5037983" target="_blank">원문 보기</a>
                 </div>
               </div>
             </div>
             
-            <div class="dispatch" data-title="원석학원 파산선고...신경주대·신라고 운명 갈림길, 충효동 경제도 긴...">
+            <div class="dispatch" data-title="[퇴근길 7분 뉴스] 광주군공항·24시간외환거래·정유사담합·한화오션">
               <div class="stamp news">뉴스</div>
               <div class="d-body">
-                <p class="d-title">원석학원 파산선고...신경주대·신라고 운명 갈림길, 충효동 경제도 긴...</p>
-                <p class="d-summary">원석학원은 경주대와 서라벌대를 통합해 신경주대를 출범시키고 부동산 매각 등을 추진하며 정상화를 시도했지만, 결국 법원의 파산 판단을 피하지 못했다. 다만 법인의 파산이 곧바로 학교 폐쇄를 의미하는 것은 아니다....</p>
-                <div class="d-meta">네이버뉴스 · 2026-07-06 16:14
-                  <a href="https://www.hidomin.com/news/articleView.html?idxno=712148" target="_blank">원문 보기</a>
+                <p class="d-title">[퇴근길 7분 뉴스] 광주군공항·24시간외환거래·정유사담합·한화오션</p>
+                <p class="d-summary">고액 사내 대출이 금융당국의 대출 규제 기조와 맞지 않고, 최대 36조6000억원이 부동산 시장에 유입돼 집값 상승을 부추길 수 있다는 우려에 따른 조치다. 삼성전자는 면적 제한을 두는 대신 직급별 대출 한도를...</p>
+                <div class="d-meta">네이버뉴스 · 2026-07-06 16:34
+                  <a href="https://news.dealsitetv.com/articles/172890" target="_blank">원문 보기</a>
                 </div>
               </div>
             </div>
             
-            <div class="dispatch" data-title="장애인·국가유공자 명의로 불법 분양…강훈식, 특별공급 점검·개선 주...">
+            <div class="dispatch" data-title="우리자산신탁, 취약계층 주거환경 개선 완료... 'With우리 하우징 프로젝...">
               <div class="stamp news">뉴스</div>
               <div class="d-body">
-                <p class="d-title">장애인·국가유공자 명의로 불법 분양…강훈식, 특별공급 점검·개선 주...</p>
-                <p class="d-summary">아울러 국토교통부와 국무조정실, 경찰청 등 관계부처에 부동산 청약 자격 위조 등 불법행위를 더욱 철저히 조사하고, 위법사례는 청약 취소와 형사처벌 등 엄정한 조치를 통해 특별공급 제도의 공정성을 확립해달라고...</p>
-                <div class="d-meta">네이버뉴스 · 2026-07-06 16:14
-                  <a href="https://news.tf.co.kr/read/ptoday/2340231.htm" target="_blank">원문 보기</a>
+                <p class="d-title">우리자산신탁, 취약계층 주거환경 개선 완료... 'With우리 하우징 프로젝...</p>
+                <p class="d-summary">사진=우리자산신탁 부동산 개발과 도시정비사업을 추진하는 자산신탁사들이 사업장 인근 지역사회와의 상생을 위한 사회공헌 활동을 확대하고 있다. 단순 기부를 넘어 주거환경 개선과 임직원 봉사활동을 결합한 지역...</p>
+                <div class="d-meta">네이버뉴스 · 2026-07-06 16:34
+                  <a href="http://www.thefirstmedia.net/news/articleView.html?idxno=203128" target="_blank">원문 보기</a>
                 </div>
               </div>
             </div>
             
-            <div class="dispatch" data-title="이성훈 LH사장 취임 “집 투기 대상 아냐…주택 공급에 모든 역량 집중...">
+            <div class="dispatch" data-title="건전성 입증한 SBI저축은행... 한신평도 기업신용등급 'A' 유지">
               <div class="stamp news">뉴스</div>
               <div class="d-body">
-                <p class="d-title">이성훈 LH사장 취임 “집 투기 대상 아냐…주택 공급에 모든 역량 집중...</p>
-                <p class="d-summary">국토교통부 부동산개발정책과장, 물류정책과장, 지역정책과장, 정책기획관 등을 역임했다. 2021년 이재명... 현 정부 출범 이후에는 국토교통비서관으로 임명돼 청와대와 국토부 간 업무를 조율하며 정부의 부동산...</p>
-                <div class="d-meta">네이버뉴스 · 2026-07-06 16:14
-                  <a href="https://www.khan.co.kr/article/202607061614001" target="_blank">원문 보기</a>
+                <p class="d-title">건전성 입증한 SBI저축은행... 한신평도 기업신용등급 'A' 유지</p>
+                <p class="d-summary">저축은행업권이 부동산 프로젝트파이낸싱(PF) 부실과 건전성 관리 강화 국면을 맞은 가운데 SBI저축은행이 국내 양대 신용평가사로부터 5년 연속 기업신용등급 'A'를 유지하며 안정적인 재무건전성을 다시 한번...</p>
+                <div class="d-meta">네이버뉴스 · 2026-07-06 16:34
+                  <a href="http://www.thefirstmedia.net/news/articleView.html?idxno=203117" target="_blank">원문 보기</a>
                 </div>
               </div>
             </div>
             
-            <div class="dispatch" data-title="금융지주, 증권사 키우기 '속도'···자본확충 경쟁 본격화">
+            <div class="dispatch" data-title="'탈서울' 60%는 경기도 선택…인천도 13만명 유입">
               <div class="stamp news">뉴스</div>
               <div class="d-body">
-                <p class="d-title">금융지주, 증권사 키우기 '속도'···자본확충 경쟁 본격화</p>
-                <p class="d-summary">하나증권은 해외 부동산과 프로젝트파이낸싱(PF) 관련 위험자산을 줄이며 건전성을 개선하는 동시에 기업금융 경쟁력 강화에도 힘을 싣고 있다. 시장에서는 하나금융지주가 두나무 지분 인수 이후에도 보통주자본비율...</p>
-                <div class="d-meta">네이버뉴스 · 2026-07-06 16:14
-                  <a href="https://www.seoulfn.com/news/articleView.html?idxno=632761" target="_blank">원문 보기</a>
+                <p class="d-title">'탈서울' 60%는 경기도 선택…인천도 13만명 유입</p>
+                <p class="d-summary">6일 부동산 리서치업체 리얼투데이가 통계청의 '2023~2025년 국내 인구이동 통계'를 분석한 결과에 따르면... 부동산업계에서는 서울과의 이동 시간이 짧고 교통 여건이 지속적으로 개선되는 경기·인천 지역을...</p>
+                <div class="d-meta">네이버뉴스 · 2026-07-06 16:34
+                  <a href="https://www.kgnews.co.kr/news/article.html?no=902820" target="_blank">원문 보기</a>
                 </div>
               </div>
             </div>
             
-            <div class="dispatch" data-title="이성훈 LH 신임 사장 &quot;집은 공공재&quot;… 주택공급 속도·품질 혁신 선언">
+            <div class="dispatch" data-title="&quot;거래대금 폭발에 돈방석 앉았다&quot;···증권사 2분기 순익 141% 급증, '역...">
               <div class="stamp news">뉴스</div>
               <div class="d-body">
-                <p class="d-title">이성훈 LH 신임 사장 "집은 공공재"… 주택공급 속도·품질 혁신 선언</p>
-                <p class="d-summary">이후 국토교통부 정책기획관과 경기도 건설국장, 대통령비서실 국토교통비서관 등을 역임하며 현 정부의 주요 부동산 정책과 국토교통 현안을 총괄해 왔다. 임기는 2029년 7월까지다. 이 사장은 취임사에서 "집은 더 이상...</p>
-                <div class="d-meta">네이버뉴스 · 2026-07-06 16:12
-                  <a href="http://www.biztribune.co.kr/news/articleView.html?idxno=355570" target="_blank">원문 보기</a>
+                <p class="d-title">"거래대금 폭발에 돈방석 앉았다"···증권사 2분기 순익 141% 급증, '역...</p>
+                <p class="d-summary">지난해 증시 부진과 부동산 프로젝트파이낸싱(PF) 충당금 부담으로 실적이 위축됐던 점을 감안하더라도 시장 예상치를 크게 웃도는 수준이다. 이번 실적 개선의 가장 큰 배경은 거래대금 증가다. 코스피가 높은...</p>
+                <div class="d-meta">네이버뉴스 · 2026-07-06 16:34
+                  <a href="https://www.smartbizn.com/news/articleView.html?idxno=147876" target="_blank">원문 보기</a>
                 </div>
               </div>
             </div>
             
-            <div class="dispatch" data-title="[건설사 점검] [우미건설] 미래 신사업 총대 3세 이승훈 '역할론' 부상">
+            <div class="dispatch" data-title="'이중가격' 덫 걸린 서울 전세시장…신규·재계약 격차 최대 8000만원">
               <div class="stamp news">뉴스</div>
               <div class="d-body">
-                <p class="d-title">[건설사 점검] [우미건설] 미래 신사업 총대 3세 이승훈 '역할론' 부상</p>
-                <p class="d-summary">우미USA는 우미그룹이 지난 2019년 미국 시장 진출과 부동산 자산 다변화를 위해 설립한 미국 현지 법인이다.... 우미그룹이 부동산과 정보기술(IT) 등을 포괄한 프롭테크 투자 활로를 모색한다는 지점에서 이승훈 실장이...</p>
-                <div class="d-meta">네이버뉴스 · 2026-07-06 16:11
-                  <a href="https://www.topdaily.kr/articles/110845" target="_blank">원문 보기</a>
+                <p class="d-title">'이중가격' 덫 걸린 서울 전세시장…신규·재계약 격차 최대 8000만원</p>
+                <p class="d-summary">6일 부동산 빅데이터 플랫폼 직방이 올해 1~6월 수도권 아파트 전세거래를 분석한 결과, 서울을 중심으로... 한국부동산원에 따르면 6월 마지막주 서울 아파트 전세수급지수는 126.7을 기록해 극심한 '수요우위' 상태를...</p>
+                <div class="d-meta">네이버뉴스 · 2026-07-06 16:33
+                  <a href="http://www.inews24.com/view/1982851" target="_blank">원문 보기</a>
                 </div>
               </div>
             </div>
             
-            <div class="dispatch" data-title="우리은행, 조직개편 당일 정보유출 공개 … 정진완 행장 연임 '악재'">
+            <div class="dispatch" data-title="[기자의 눈] 반복되는 '규제-공급-규제'...다음에 묶을 지역은 어디">
               <div class="stamp news">뉴스</div>
               <div class="d-body">
-                <p class="d-title">우리은행, 조직개편 당일 정보유출 공개 … 정진완 행장 연임 '악재'</p>
-                <p class="d-summary">개인영업전략부, 부동산금융부, 채널전략부, MyData플랫폼부를 통합해 리테일영업총괄부를 만들었다. 데이터 기반 영업 기능을 한곳에 모으겠다는 취지다. 내부통제 조직도 바꿨다. 검사 기능을 검사총괄부로 통합하고...</p>
-                <div class="d-meta">네이버뉴스 · 2026-07-06 16:10
-                  <a href="https://www.safetimes.co.kr/news/articleView.html?idxno=243956" target="_blank">원문 보기</a>
+                <p class="d-title">[기자의 눈] 반복되는 '규제-공급-규제'...다음에 묶을 지역은 어디</p>
+                <p class="d-summary">이로써 현 정부의 부동산 시장 대응 기조는 명확해졌다. 대출과 거래를 옥죄는 규제로 시장을 통제하겠다는... KB부동산 월간주택가격동향 시계열 자료에 따르면 이재명 대통령 취임 직전 달부터 올해 5월까지 1년간 서울...</p>
+                <div class="d-meta">네이버뉴스 · 2026-07-06 16:32
+                  <a href="https://www.news2day.co.kr/article/20260706500132" target="_blank">원문 보기</a>
                 </div>
               </div>
             </div>
             
-            <div class="dispatch" data-title="주택공급 '속도' 강조한 LH 이성훈 &quot;전력질주해야&quot;">
+            <div class="dispatch" data-title="이성훈 LH 신임 사장 &quot;신속한 주택공급 역점&quot;">
               <div class="stamp news">뉴스</div>
               <div class="d-body">
-                <p class="d-title">주택공급 '속도' 강조한 LH 이성훈 "전력질주해야"</p>
-                <p class="d-summary">이 신임 사장은 직전까지 대통령비서실 국토교통비서관을 지내며 현 정부 주요 부동산 정책을 총괄 조율해... 추진해서 부동산 시장 안정을 선도하고 국가 발전에 기여해야 합니다. 특히, 지금은 국민이 기다리는 시간을...</p>
-                <div class="d-meta">네이버뉴스 · 2026-07-06 16:10
-                  <a href="https://news.bizwatch.co.kr/article/real_estate/2026/07/06/0017" target="_blank">원문 보기</a>
+                <p class="d-title">이성훈 LH 신임 사장 "신속한 주택공급 역점"</p>
+                <p class="d-summary">이 신임 사장은 대통령비서실 국토교통비서관으로 재직하며 현 정부의 주요 부동산 정책을 총괄 조율해 왔으며, 국토교통부 정책기획관과 경기도 건설국장 등을 역임했다. 임기는 2029년 7월까지이다. 이 사장은...</p>
+                <div class="d-meta">네이버뉴스 · 2026-07-06 16:32
+                  <a href="https://www.idomin.com/news/articleView.html?idxno=2009449" target="_blank">원문 보기</a>
                 </div>
               </div>
             </div>
             
-            <div class="dispatch" data-title="[단독] 30년 멈춘 복현SKY 다시 움직인다…노유자시설 전환 추진">
+            <div class="dispatch" data-title="中증시도 AI·반도체만 잘나가…산업 양극화 보여주는 축소판">
               <div class="stamp news">뉴스</div>
               <div class="d-body">
-                <p class="d-title">[단독] 30년 멈춘 복현SKY 다시 움직인다…노유자시설 전환 추진</p>
-                <p class="d-summary">인근 부동산 업계도 최근 사업이 다시 움직이기 시작했다고 설명했다. 복현동 한 공인중개사는 "그동안 여러 업체가 사업을 추진하다 무산됐지만 최근 새 시행사가 들어온 뒤 관련 문의도 이어지고 있다"고 말했다....</p>
-                <div class="d-meta">네이버뉴스 · 2026-07-06 16:10
-                  <a href="https://www.idaegu.com/news/articleView.html?idxno=664125" target="_blank">원문 보기</a>
+                <p class="d-title">中증시도 AI·반도체만 잘나가…산업 양극화 보여주는 축소판</p>
+                <p class="d-summary">첨단 제조업은 호조를 보이는 반면 소비와 부동산 등 전통 부문은 부진한 흐름이 주식시장에서도 고스란히... 부동산 경기 침체에서 비롯된 내수 부진을 타개할 정부 차원의 확실한 경기부양책이 부족하다는 지적도...</p>
+                <div class="d-meta">네이버뉴스 · 2026-07-06 16:31
+                  <a href="https://www.yna.co.kr/view/AKR20260706121200009?input=1195m" target="_blank">원문 보기</a>
                 </div>
               </div>
             </div>
             
-            <div class="dispatch" data-title="2027년 입주물량 역대 최저···인허가·착공도 감소세">
+            <div class="dispatch" data-title="10억 찍은 아파트도 6억대 급매…동탄 집주인들 규제 전날 '막차 행렬'">
               <div class="stamp news">뉴스</div>
               <div class="d-body">
-                <p class="d-title">2027년 입주물량 역대 최저···인허가·착공도 감소세</p>
-                <p class="d-summary">부동산R114에 따르면 2027년 서울 아파트 입주 예정 물량은 임대 물량을 제외하고 총 1만3019가구로... 부동산R114 자료를 보면 올해 1월부터 6월까지 서울 분양 단지 1순위 청약자는 총 8만3076명으로, 지난해 같은 기간...</p>
-                <div class="d-meta">네이버뉴스 · 2026-07-06 16:08
-                  <a href="https://www.ziksir.com/news/articleView.html?idxno=139223" target="_blank">원문 보기</a>
+                <p class="d-title">10억 찍은 아파트도 6억대 급매…동탄 집주인들 규제 전날 '막차 행렬'</p>
+                <p class="d-summary">다만 부동산시장 전문가들은 이런 관망세가 장기화하지는 않을 것으로 전망했다. 윤지해 부동산114 리서치랩장은 "현재 거래 절벽이 규제 도입에 따른 과도기적 현상"이라며 "단기적으로는 거래량이 감소하겠지만...</p>
+                <div class="d-meta">네이버뉴스 · 2026-07-06 16:31
+                  <a href="https://www.mt.co.kr/estate/2026/07/06/2026070615335425107" target="_blank">원문 보기</a>
                 </div>
               </div>
             </div>
             
-            <div class="dispatch" data-title="LH 신임 사장 이성훈 취임일성으로 빠른 주택공급 강조, &quot;집은 삶을 지탱...">
+            <div class="dispatch" data-title="&quot;강원·전북에선 좀 더 특별한 산업적 실험 해볼 필요 있어&quot;">
               <div class="stamp news">뉴스</div>
               <div class="d-body">
-                <p class="d-title">LH 신임 사장 이성훈 취임일성으로 빠른 주택공급 강조, "집은 삶을 지탱...</p>
-                <p class="d-summary">이후 국토교통부에서 물류시설정보과장과 부동산개발정책과장, 물류정책과장, 지역정책과장 등을 거쳤다. 2021년에는 경기도 건설국장으로 파견돼 근무하며 당시 경기도지사였던 이재명 대통령과 호흡을 맞췄다. 이후...</p>
-                <div class="d-meta">네이버뉴스 · 2026-07-06 16:08
-                  <a href="https://www.businesspost.co.kr/BP?command=article_view&num=441648" target="_blank">원문 보기</a>
+                <p class="d-title">"강원·전북에선 좀 더 특별한 산업적 실험 해볼 필요 있어"</p>
+                <p class="d-summary">▲  마강래 중앙대 도시계획부동산학과 교수 ⓒ 이영광 이재명 대통령이 6월 29일 청와대에서 반도체·피지컬... 이에 대해 들어보고자 지난 1일 서울 용산역에서 마강래 중앙대 도시계획부동산학과 교수를 만났다. 다음은...</p>
+                <div class="d-meta">네이버뉴스 · 2026-07-06 16:31
+                  <a href="https://www.ohmynews.com/NWS_Web/View/at_pg.aspx?CNTN_CD=A0003248766&CMPT_CD=P0010&utm_source=naver&utm_medium=newsearch&utm_campaign=naver_news" target="_blank">원문 보기</a>
                 </div>
               </div>
             </div>
             
-            <div class="dispatch" data-title="망해가는 지방백화점… 현대백화점이 던진 생존경쟁, 울산 동구점 쇼핑...">
+            <div class="dispatch" data-title="고양 삼송 AI DC에...은행권 1.1조 PF">
               <div class="stamp news">뉴스</div>
               <div class="d-body">
-                <p class="d-title">망해가는 지방백화점… 현대백화점이 던진 생존경쟁, 울산 동구점 쇼핑...</p>
-                <p class="d-summary">단순히 이익률만 따진다면 부동산을 처분하는 것이 유리함에도, 대규모 개발을 통한 공간 유지를 택한 것은 지역 사회와의 동반 성장을 염두에 둔 책임 경영 관점으로 풀이된다. 계획안에 따르면 현대백화점은 기존...</p>
-                <div class="d-meta">네이버뉴스 · 2026-07-06 16:08
-                  <a href="https://www.donga.com/news/Economy/article/all/20260706/134245077/1" target="_blank">원문 보기</a>
+                <p class="d-title">고양 삼송 AI DC에...은행권 1.1조 PF</p>
+                <p class="d-summary">데이터센터 PF는 일반 부동산 개발사업과 달리 장기 선임차 계약을 기반으로 향후 발생할 임대수익을 평가해 본PF를 조달하는 구조다. 초기부터 안정적인 현금흐름을 예측할 수 있다는 특징이 있다. 금융당국이 AI...</p>
+                <div class="d-meta">네이버뉴스 · 2026-07-06 16:30
+                  <a href="https://www.sedaily.com/article/20064315?ref=naver" target="_blank">원문 보기</a>
                 </div>
               </div>
             </div>
             
-            <div class="dispatch" data-title="강훈식, 장애인 특공 부정청약에 &quot;매우 심각한 문제…제도 전반 점검&quot;">
+            <div class="dispatch" data-title="강훈식 &quot;아파트 특별공급 제도 전반 점검·개선…공정성 확립&quot;">
               <div class="stamp news">뉴스</div>
               <div class="d-body">
-                <p class="d-title">강훈식, 장애인 특공 부정청약에 "매우 심각한 문제…제도 전반 점검"</p>
-                <p class="d-summary">강 비서실장은 국토교통부와 국무조정실, 경찰청 등 관계부처에 부동산 청약 자격 위조 등 불법행위를 철저히 조사하고, 적발된 사례에는 청약 취소와 형사처벌 등 엄정한 조치를 통해 특별공급 제도의 공정성을 확립해...</p>
-                <div class="d-meta">네이버뉴스 · 2026-07-06 16:07
-                  <a href="https://www.news1.kr/politics/president/6219174" target="_blank">원문 보기</a>
+                <p class="d-title">강훈식 "아파트 특별공급 제도 전반 점검·개선…공정성 확립"</p>
+                <p class="d-summary">이에 "부동산 청약 자격 위조 등 불법행위를 더 철저히 조사하고, 적발된 위법 사례에 대해 청약 취소와 형사처벌 등 엄정한 조치를 통해 특별공급 제도의 공정성을 확립해달라"고 관계부처에 주문했다. 특별공급...</p>
+                <div class="d-meta">네이버뉴스 · 2026-07-06 16:30
+                  <a href="https://www.yna.co.kr/view/AKR20260706124300001?input=1195m" target="_blank">원문 보기</a>
                 </div>
               </div>
             </div>
@@ -391,7 +412,12 @@ h1 { font-size: 24px; border-bottom: 2px solid #EDE7D8; padding-bottom: 12px; ma
           </div>
         </div>
         
-  <div class="archive">지난 리포트: <a href="archive/2026-07-06.html">2026-07-06</a></div>
+  <div class="archive">
+    <label for="dateSelect">날짜 선택: </label>
+    <select id="dateSelect" onchange="if(this.value) window.location.href = this.value;">
+      <option value="/daily-briefing/index.html">오늘 · 2026-07-06</option>
+    </select>
+  </div>
 </div>
 <script>
 function showTab(kw) {
@@ -405,6 +431,7 @@ function showView(kw, view) {
   panel.querySelectorAll('.view-toggle button').forEach(b => b.classList.toggle('active', b.dataset.view === view));
   panel.querySelector('.summary-view').style.display = view === 'summary' ? 'block' : 'none';
   panel.querySelector('.full-view').style.display = view === 'full' ? 'block' : 'none';
+  panel.querySelector('.report-view').style.display = view === 'report' ? 'block' : 'none';
 }
 function filterItems() {
   const q = document.getElementById('search').value.trim().toLowerCase();
@@ -412,6 +439,13 @@ function filterItems() {
     const match = el.dataset.title.toLowerCase().includes(q);
     el.style.display = match ? '' : 'none';
   });
+}
+function requestKeyword(action) {
+  const kw = document.getElementById('kw-input').value.trim();
+  if (!kw) { alert('키워드를 입력해주세요.'); return; }
+  const title = encodeURIComponent(action + ': ' + kw);
+  const url = 'https://github.com/dhur3/daily-briefing/issues/new?title=' + title;
+  window.open(url, '_blank');
 }
 </script>
 </body>
