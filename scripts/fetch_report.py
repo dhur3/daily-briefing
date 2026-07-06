@@ -147,14 +147,107 @@ def build_report(today_str):
     return report
 
 
+PAGE_TEMPLATE = """<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>데일리 브리핑 데스크 — {date}</title>
+<style>
+body {{ margin:0; background:#101B24; color:#EDE7D8; font-family: sans-serif; }}
+.desk {{ max-width: 900px; margin: 0 auto; padding: 30px 20px 60px; }}
+h1 {{ font-size: 24px; border-bottom: 2px solid #EDE7D8; padding-bottom: 12px; margin-bottom: 18px; }}
+.tabs {{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom: 14px; }}
+.tab-btn {{ background: transparent; border:1px solid rgba(237,231,216,0.3); color:#EDE7D8;
+  padding:8px 14px; border-radius:20px; font-size:13.5px; cursor:pointer; }}
+.tab-btn.active {{ background:#C99A3D; color:#16232E; border-color:#C99A3D; font-weight:600; }}
+.search-row {{ margin-bottom: 22px; }}
+.search-row input {{ width:100%; box-sizing:border-box; background:#16232E; border:1px solid rgba(237,231,216,0.2);
+  color:#EDE7D8; padding:10px 12px; border-radius:6px; font-size:14px; }}
+.view-toggle {{ display:flex; gap:8px; margin: 6px 0 18px; }}
+.view-toggle button {{ background: transparent; border:1px solid rgba(237,231,216,0.25); color:#93A4AF;
+  padding:6px 12px; border-radius:14px; font-size:12.5px; cursor:pointer; }}
+.view-toggle button.active {{ color:#EDE7D8; border-color:#5B8DBE; }}
+.summary-list {{ list-style:none; padding:0; margin:0; }}
+.summary-list li {{ padding:9px 0; border-top:1px solid rgba(237,231,216,0.1); font-size:13.5px; }}
+.summary-list .tag {{ display:inline-block; width:34px; font-size:10.5px; color:#16232E; text-align:center;
+  border-radius:2px; margin-right:8px; }}
+.summary-list .tag.news {{ background:#B5D4F4; }}
+.summary-list .tag.disclosure {{ background:#FAC775; }}
+.summary-list a {{ color:#EDE7D8; text-decoration:none; }}
+.summary-list a:hover {{ color:#5B8DBE; }}
+.dispatch {{ display:flex; gap:14px; padding:14px 0; border-top:1px solid rgba(237,231,216,0.12); }}
+.stamp {{ flex-shrink:0; width:56px; text-align:center; font-size:11px; padding:4px 2px; border-radius:2px; color:#16232E; }}
+.stamp.news {{ background:#B5D4F4; }}
+.stamp.disclosure {{ background:#FAC775; }}
+.d-title {{ font-weight:600; margin:0 0 4px; }}
+.d-summary {{ font-size:13.5px; color:#C7CDD1; margin:0 0 6px; }}
+.d-meta {{ font-size:12px; color:#93A4AF; }}
+.d-meta a {{ color:#5B8DBE; margin-left:8px; }}
+.empty {{ color:#93A4AF; font-size:14px; }}
+.archive {{ margin-top:40px; font-size:13px; color:#93A4AF; }}
+.archive a {{ color:#5B8DBE; margin-right:10px; }}
+.tab-panel {{ display:none; }}
+.tab-panel.active {{ display:block; }}
+</style>
+</head>
+<body>
+<div class="desk">
+  <h1>데일리 브리핑 데스크 — {date}</h1>
+  <div class="tabs">{tab_buttons}</div>
+  <div class="search-row"><input id="search" placeholder="제목으로 검색..." oninput="filterItems()"></div>
+  {panels}
+  <div class="archive">지난 리포트: {archive_links}</div>
+</div>
+<script>
+function showTab(kw) {{
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.kw === kw));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.dataset.kw === kw));
+  document.getElementById('search').value = '';
+  filterItems();
+}}
+function showView(kw, view) {{
+  const panel = document.querySelector('.tab-panel[data-kw="' + kw + '"]');
+  panel.querySelectorAll('.view-toggle button').forEach(b => b.classList.toggle('active', b.dataset.view === view));
+  panel.querySelector('.summary-view').style.display = view === 'summary' ? 'block' : 'none';
+  panel.querySelector('.full-view').style.display = view === 'full' ? 'block' : 'none';
+}}
+function filterItems() {{
+  const q = document.getElementById('search').value.trim().toLowerCase();
+  document.querySelectorAll('.tab-panel.active [data-title]').forEach(el => {{
+    const match = el.dataset.title.toLowerCase().includes(q);
+    el.style.display = match ? '' : 'none';
+  }});
+}}
+</script>
+</body>
+</html>
+"""
+
+
+def render_summary_list(items, empty_label):
+    if not items:
+        return f'<p class="empty">{empty_label}</p>'
+    rows = []
+    for it in items:
+        cls = "disclosure" if it.get("_kind") == "disclosure" else "news"
+        tag = "공시" if cls == "disclosure" else "뉴스"
+        title_attr = it["title"].replace('"', "&quot;")
+        rows.append(
+            f'<li data-title="{title_attr}"><span class="tag {cls}">{tag}</span>'
+            f'<a href="{it["url"]}" target="_blank">{it["title"]}</a></li>'
+        )
+    return f'<ul class="summary-list">{"".join(rows)}</ul>'
+
+
 def render_items_html(items, empty_label, stamp_class):
     if not items:
         return f'<p class="empty">{empty_label}</p>'
     rows = []
     for it in items:
+        title_attr = it["title"].replace('"', "&quot;")
         rows.append(
             f"""
-            <div class="dispatch">
+            <div class="dispatch" data-title="{title_attr}">
               <div class="stamp {stamp_class}">{'공시' if stamp_class == 'disclosure' else '뉴스'}</div>
               <div class="d-body">
                 <p class="d-title">{it['title']}</p>
@@ -169,53 +262,46 @@ def render_items_html(items, empty_label, stamp_class):
     return "".join(rows)
 
 
-PAGE_TEMPLATE = """<!DOCTYPE html>
-<html lang="ko">
-<head>
-<meta charset="UTF-8">
-<title>데일리 브리핑 데스크 — {date}</title>
-<style>
-body {{ margin:0; background:#101B24; color:#EDE7D8; font-family: sans-serif; }}
-.desk {{ max-width: 900px; margin: 0 auto; padding: 30px 20px 60px; }}
-h1 {{ font-size: 24px; border-bottom: 2px solid #EDE7D8; padding-bottom: 12px; }}
-h2 {{ font-size: 19px; margin-top: 34px; color: #C99A3D; }}
-.dispatch {{ display:flex; gap:14px; padding:14px 0; border-top:1px solid rgba(237,231,216,0.12); }}
-.stamp {{ flex-shrink:0; width:56px; text-align:center; font-size:11px; padding:4px 2px; border-radius:2px; color:#16232E; }}
-.stamp.news {{ background:#B5D4F4; }}
-.stamp.disclosure {{ background:#FAC775; }}
-.d-title {{ font-weight:600; margin:0 0 4px; }}
-.d-summary {{ font-size:13.5px; color:#C7CDD1; margin:0 0 6px; }}
-.d-meta {{ font-size:12px; color:#93A4AF; }}
-.d-meta a {{ color:#5B8DBE; margin-left:8px; }}
-.empty {{ color:#93A4AF; font-size:14px; }}
-.archive {{ margin-top:40px; font-size:13px; color:#93A4AF; }}
-.archive a {{ color:#5B8DBE; margin-right:10px; }}
-</style>
-</head>
-<body>
-<div class="desk">
-  <h1>데일리 브리핑 데스크 — {date}</h1>
-  {sections}
-  <div class="archive">지난 리포트: {archive_links}</div>
-</div>
-</body>
-</html>
-"""
-
-
 def render_page(report, archive_dates):
-    sections = []
-    for kw, data in report["keywords"].items():
-        sections.append(f"<h2>{kw}</h2>")
-        sections.append(render_items_html(data["news"], "오늘 수집된 뉴스가 없습니다.", "news"))
-        sections.append(
-            render_items_html(data["disclosures"], "오늘 수집된 공시가 없습니다.", "disclosure")
+    tab_buttons = []
+    panels = []
+    keywords = list(report["keywords"].keys())
+    for i, kw in enumerate(keywords):
+        data = report["keywords"][kw]
+        active = "active" if i == 0 else ""
+        tab_buttons.append(
+            f'<button class="tab-btn {active}" data-kw="{kw}" onclick="showTab(this.dataset.kw)">{kw}</button>'
         )
+
+        all_items = (
+            [{**it, "_kind": "news"} for it in data["news"]]
+            + [{**it, "_kind": "disclosure"} for it in data["disclosures"]]
+        )
+
+        panels.append(f"""
+        <div class="tab-panel {active}" data-kw="{kw}">
+          <div class="view-toggle">
+            <button class="active" data-view="summary" onclick="showView('{kw}','summary')">간단 요약 보기</button>
+            <button data-view="full" onclick="showView('{kw}','full')">전체 원문 목록</button>
+          </div>
+          <div class="summary-view">
+            {render_summary_list(all_items, "오늘 수집된 내용이 없습니다.")}
+          </div>
+          <div class="full-view" style="display:none">
+            {render_items_html(data["news"], "오늘 수집된 뉴스가 없습니다.", "news")}
+            {render_items_html(data["disclosures"], "오늘 수집된 공시가 없습니다.", "disclosure")}
+          </div>
+        </div>
+        """)
+
     archive_links = " ".join(
         f'<a href="archive/{d}.html">{d}</a>' for d in archive_dates
     ) or "-"
     return PAGE_TEMPLATE.format(
-        date=report["date"], sections="".join(sections), archive_links=archive_links
+        date=report["date"],
+        tab_buttons="".join(tab_buttons),
+        panels="".join(panels),
+        archive_links=archive_links,
     )
 
 
