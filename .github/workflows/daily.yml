@@ -17,7 +17,7 @@ jobs:
         with:
           python-version: "3.11"
       - name: 패키지 설치
-        run: pip install -r requirements.txt
+      run: pip install requests
       - name: 리포트 수집 및 페이지 생성
         env:
           NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
