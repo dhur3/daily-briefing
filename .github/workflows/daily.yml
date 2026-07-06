@@ -1,13 +1,10 @@
 name: daily-briefing
-
 on:
+  workflow_dispatch: {}
   schedule:
     - cron: "0 23 * * *"
-  workflow_dispatch: {}
-
 permissions:
   contents: write
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -16,9 +13,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: 패키지 설치
-      run: pip install requests
-      - name: 리포트 수집 및 페이지 생성
+      - name: install packages
+        run: pip install requests
+      - name: run script
         env:
           NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
           NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
@@ -27,8 +24,8 @@ jobs:
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
           TO_EMAIL: ${{ secrets.TO_EMAIL }}
         run: python scripts/fetch_report.py
-      - name: 결과 커밋
+      - name: commit results
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "docs: 데일리 브리핑 자동 업데이트"
-          file_pattern: "docs/**"
+          commit_message: update daily report
+          file_pattern: docs/**
