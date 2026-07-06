@@ -16,6 +16,8 @@ from zoneinfo import ZoneInfo
 import requests
 
 ROOT = Path(__file__).resolve().parent.parent
+# 여기 이름만 바꾸면 웹페이지 제목/상단 타이틀/이메일 제목이 다 같이 바뀝니다
+SITE_NAME = "오늘의 부동산 뉴스"
 # 저장소 이름이 바뀌면 이 값도 같이 바꿔주세요 (계정명/저장소명)
 REPO_SLUG = "dhur3/daily-briefing"
 # GitHub Pages 주소의 기본 경로 (예: https://dhur3.github.io/daily-briefing/ -> /daily-briefing/)
@@ -207,7 +209,7 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>데일리 브리핑 데스크 — {date}</title>
+<title>{site_name} — {date}</title>
 <style>
 body {{ margin:0; background:#101B24; color:#EDE7D8; font-family: sans-serif; }}
 .desk {{ max-width: 900px; margin: 0 auto; padding: 30px 20px 60px; }}
@@ -259,7 +261,7 @@ h1 {{ font-size: 24px; border-bottom: 2px solid #EDE7D8; padding-bottom: 12px; m
 </head>
 <body>
 <div class="desk">
-  <h1>데일리 브리핑 데스크 — {date}</h1>
+  <h1>{site_name} — {date}</h1>
   <div class="tabs">{tab_buttons}</div>
   <div class="kw-manage">
     <input id="kw-input" placeholder="키워드 입력 (예: 삼성전자)">
@@ -403,6 +405,7 @@ def render_page(report, archive_dates):
 
     return PAGE_TEMPLATE.format(
         date=report["date"],
+        site_name=SITE_NAME,
         tab_buttons="".join(tab_buttons),
         panels="".join(panels),
         date_options=date_options,
@@ -415,7 +418,7 @@ def send_email(report):
         print("이메일 설정이 없어 발송을 건너뜁니다.")
         return
 
-    lines = [f"[데일리 브리핑 데스크] {report['date']}\n"]
+    lines = [f"[{SITE_NAME}] {report['date']}\n"]
     for kw, data in report["keywords"].items():
         lines.append(f"■ {kw}")
         lines.append(f"  - 뉴스 {len(data['news'])}건, 공시 {len(data['disclosures'])}건")
@@ -427,7 +430,7 @@ def send_email(report):
     body = "\n".join(lines)
 
     msg = MIMEText(body, _charset="utf-8")
-    msg["Subject"] = f"데일리 브리핑 데스크 {report['date']}"
+    msg["Subject"] = f"{SITE_NAME} {report['date']}"
     msg["From"] = GMAIL_ADDRESS
     msg["To"] = TO_EMAIL
 
