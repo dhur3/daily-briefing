@@ -253,6 +253,7 @@ h1 {{ font-size: 24px; border-bottom: 2px solid #EDE7D8; padding-bottom: 12px; m
 .empty {{ color:#93A4AF; font-size:14px; }}
 .archive {{ margin-top:40px; font-size:13px; color:#93A4AF; }}
 .archive a {{ color:#5B8DBE; margin-right:10px; }}
+.archive .today-link {{ color:#C99A3D; font-weight:600; }}
 .archive select {{ background:#16232E; color:#EDE7D8; border:1px solid rgba(237,231,216,0.25);
   border-radius:6px; padding:6px 10px; font-size:13px; }}
 .tab-panel {{ display:none; }}
@@ -272,7 +273,9 @@ h1 {{ font-size: 24px; border-bottom: 2px solid #EDE7D8; padding-bottom: 12px; m
   <div class="search-row"><input id="search" placeholder="제목으로 검색..." oninput="filterItems()"></div>
   {panels}
   <div class="archive">
-    <label for="dateSelect">날짜 선택: </label>
+    <a class="today-link" href="{pages_base}index.html">오늘 리포트로 돌아가기</a>
+    &nbsp;|&nbsp;
+    <label for="dateSelect">다른 날짜 선택: </label>
     <select id="dateSelect" onchange="if(this.value) window.location.href = this.value;">
       {date_options}
     </select>
@@ -409,6 +412,7 @@ def render_page(report, archive_dates):
         tab_buttons="".join(tab_buttons),
         panels="".join(panels),
         date_options=date_options,
+        pages_base=PAGES_BASE,
         repo_slug=REPO_SLUG,
     )
 
