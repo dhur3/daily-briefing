@@ -24,6 +24,7 @@ REPO_SLUG = "dhur3/daily-briefing"
 PAGES_BASE = "/" + REPO_SLUG.split("/", 1)[1] + "/"
 DOCS = ROOT / "docs"
 ARCHIVE = DOCS / "archive"
+DATA_DIR = DOCS / "data"  # 날짜별 원본 데이터(JSON)를 영구 저장하는 곳
 KST = ZoneInfo("Asia/Seoul")
 
 NAVER_CLIENT_ID = os.environ.get("NAVER_CLIENT_ID", "")
@@ -353,7 +354,8 @@ def render_items_html(items, empty_label, stamp_class):
     return "".join(rows)
 
 
-def render_page(report, archive_dates):
+def render_page(report, archive_dates, real_today=None):
+    real_today = real_today or report["date"]
     tab_buttons = []
     panels = []
     keywords = list(report["keywords"].keys())
@@ -398,11 +400,11 @@ def render_page(report, archive_dates):
         </div>
         """)
 
-    today_option = f'<option value="{PAGES_BASE}index.html">오늘 · {report["date"]}</option>'
+    today_option = f'<option value="{PAGES_BASE}index.html">오늘 · {real_today}</option>'
     past_options = "".join(
         f'<option value="{PAGES_BASE}archive/{d}.html">{d}</option>'
         for d in archive_dates
-        if d != report["date"]
+        if d != real_today
     )
     date_options = today_option + past_options
 
@@ -453,15 +455,27 @@ def main():
 
     DOCS.mkdir(exist_ok=True)
     ARCHIVE.mkdir(exist_ok=True)
+    DATA_DIR.mkdir(exist_ok=True)
 
-    # 지난 리포트 날짜 전체 목록 (드롭다운에 다 넣어도 가벼워서 개수 제한 없음)
-    existing = sorted(
-        [p.stem for p in ARCHIVE.glob("*.html") if p.stem != today_str], reverse=True
-    )
+    # 오늘자 원본 데이터를 영구 저장 (나중에 디자인이 바뀌어도 다시 그릴 수 있도록)
+    with open(DATA_DIR / f"{today_str}.json", "w", encoding="utf-8") as f:
+        json.dump(report, f, ensure_ascii=False, indent=2)
 
-    page = render_page(report, existing)
+    # 지금까지 저장된 모든 날짜 (오늘 포함)
+    all_dates = sorted([p.stem for p in DATA_DIR.glob("*.json")], reverse=True)
+
+    # 오늘 페이지 생성
+    today_others = [d for d in all_dates if d != today_str]
+    page = render_page(report, today_others, real_today=today_str)
     (DOCS / "index.html").write_text(page, encoding="utf-8")
-    (ARCHIVE / f"{today_str}.html").write_text(page, encoding="utf-8")
+
+    # 저장된 데이터가 있는 지난 날짜들도 최신 디자인으로 전부 다시 그림
+    for d in all_dates:
+        with open(DATA_DIR / f"{d}.json", encoding="utf-8") as f:
+            past_report = json.load(f)
+        past_others = [x for x in all_dates if x != d]
+        past_page = render_page(past_report, past_others, real_today=today_str)
+        (ARCHIVE / f"{d}.html").write_text(past_page, encoding="utf-8")
 
     with open(DOCS / "latest.json", "w", encoding="utf-8") as f:
         json.dump(report, f, ensure_ascii=False, indent=2)
