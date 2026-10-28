@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>오늘의 부동산 뉴스 — 2026-10-28</title>
+<style>
+body { margin:0; background:#101B24; color:#EDE7D8; font-family: sans-serif; }
+.desk { max-width: 900px; margin: 0 auto; padding: 30px 20px 60px; }
+h1 { font-size: 24px; border-bottom: 2px solid #EDE7D8; padding-bottom: 12px; margin-bottom: 18px; }
+.tabs { display:flex; flex-wrap:wrap; gap:8px; margin-bottom: 14px; }
+.tab-btn { background: transparent; border:1px solid rgba(237,231,216,0.3); color:#EDE7D8;
+  padding:8px 14px; border-radius:20px; font-size:13.5px; cursor:pointer; }
+.tab-btn.active { background:#C99A3D; color:#16232E; border-color:#C99A3D; font-weight:600; }
+.search-row { margin-bottom: 22px; }
+.search-row input { width:100%; box-sizing:border-box; background:#16232E; border:1px solid rgba(237,231,216,0.2);
+  color:#EDE7D8; padding:10px 12px; border-radius:6px; font-size:14px; }
+.kw-manage { display:flex; gap:8px; margin-bottom: 26px; flex-wrap:wrap; }
+.kw-manage input { flex:1; min-width:160px; background:#16232E; border:1px solid rgba(237,231,216,0.2);
+  color:#EDE7D8; padding:9px 12px; border-radius:6px; font-size:13.5px; }
+.kw-manage button { border:none; border-radius:6px; padding:9px 14px; font-size:13px; cursor:pointer; }
+.kw-manage .add-btn { background:#5B8DBE; color:#16232E; }
+.kw-manage .remove-btn { background: transparent; border:1px solid rgba(237,231,216,0.3); color:#EDE7D8; }
+.kw-manage-note { font-size:11.5px; color:#5F5E5A; margin: -18px 0 24px; }
+.view-toggle { display:flex; gap:8px; margin: 6px 0 18px; }
+.view-toggle button { background: transparent; border:1px solid rgba(237,231,216,0.25); color:#93A4AF;
+  padding:6px 12px; border-radius:14px; font-size:12.5px; cursor:pointer; }
+.view-toggle button.active { color:#EDE7D8; border-color:#5B8DBE; }
+.report-box { background: rgba(201,154,61,0.1); border-left:3px solid #C99A3D; padding:16px 18px;
+  font-size:14.5px; line-height:1.8; white-space:pre-wrap; }
+.summary-list { list-style:none; padding:0; margin:0; }
+.summary-list li { padding:9px 0; border-top:1px solid rgba(237,231,216,0.1); font-size:13.5px; }
+.summary-list .tag { display:inline-block; width:34px; font-size:10.5px; color:#16232E; text-align:center;
+  border-radius:2px; margin-right:8px; }
+.summary-list .tag.news { background:#B5D4F4; }
+.summary-list .tag.disclosure { background:#FAC775; }
+.summary-list a { color:#EDE7D8; text-decoration:none; }
+.summary-list a:hover { color:#5B8DBE; }
+.dispatch { display:flex; gap:14px; padding:14px 0; border-top:1px solid rgba(237,231,216,0.12); }
+.stamp { flex-shrink:0; width:56px; text-align:center; font-size:11px; padding:4px 2px; border-radius:2px; color:#16232E; }
+.stamp.news { background:#B5D4F4; }
+.stamp.disclosure { background:#FAC775; }
+.d-title { font-weight:600; margin:0 0 4px; }
+.d-summary { font-size:13.5px; color:#C7CDD1; margin:0 0 6px; }
+.d-meta { font-size:12px; color:#93A4AF; }
+.d-meta a { color:#5B8DBE; margin-left:8px; }
+.empty { color:#93A4AF; font-size:14px; }
+.archive { margin-top:40px; font-size:13px; color:#93A4AF; }
+.archive a { color:#5B8DBE; margin-right:10px; }
+.archive .today-link { color:#C99A3D; font-weight:600; }
+.archive select { background:#16232E; color:#EDE7D8; border:1px solid rgba(237,231,216,0.25);
+  border-radius:6px; padding:6px 10px; font-size:13px; }
+.tab-panel { display:none; }
+.tab-panel.active { display:block; }
+</style>
+</head>
+<body>
+<div class="desk">
+  <h1>오늘의 부동산 뉴스 — 2026-10-28</h1>
+  <div class="tabs"><button class="tab-btn active" data-kw="부동산" onclick="showTab(this.dataset.kw)">부동산</button></div>
+  <div class="kw-manage">
+    <input id="kw-input" placeholder="키워드 입력 (예: 삼성전자)">
+    <button class="add-btn" onclick="requestKeyword('add')">추가 요청</button>
+    <button class="remove-btn" onclick="requestKeyword('remove')">삭제 요청</button>
+  </div>
+  <p class="kw-manage-note">버튼을 누르면 GitHub 이슈 작성 화면이 열립니다. 거기서 "Submit new issue"만 누르면 자동으로 반영돼요 (GitHub 로그인 필요).</p>
+  <div class="search-row"><input id="search" placeholder="제목으로 검색..." oninput="filterItems()"></div>
+  
+        <div class="tab-panel active" data-kw="부동산">
+          <div class="view-toggle">
+            <button data-view="report" onclick="showView('부동산','report')">데일리 리포트</button>
+            <button class="active" data-view="summary" onclick="showView('부동산','summary')">간단 요약 보기</button>
+            <button data-view="full" onclick="showView('부동산','full')">전체 원문 목록</button>
+          </div>
+          <div class="report-view" style="display:none">
+            <p class="empty">데일리 리포트(AI 요약)를 쓰려면 저장소 Secrets에 ANTHROPIC_API_KEY를 등록해주세요.</p>
+          </div>
+          <div class="summary-view">
+            <ul class="summary-list"><li data-title="표예진부터 임수향까지 총출동…사랑·이별·성장 담은 8편 단막극 온다..."><span class="tag news">뉴스</span><a href="http://www.osen.co.kr/article/G1112899762" target="_blank">표예진부터 임수향까지 총출동…사랑·이별·성장 담은 8편 단막극 온다...</a></li><li data-title="오산시, AI 활용 부동산 거래 위험 사전 점검...경기도와 공동 캠페인"><span class="tag news">뉴스</span><a href="https://www.kmaeil.com/news/articleView.html?idxno=656112" target="_blank">오산시, AI 활용 부동산 거래 위험 사전 점검...경기도와 공동 캠페인</a></li><li data-title="페루계 美자선사업가, 서울아산병원서 생체간이식 후 ‘새삶’"><span class="tag news">뉴스</span><a href="https://www.etoday.co.kr/news/view/2641049" target="_blank">페루계 美자선사업가, 서울아산병원서 생체간이식 후 ‘새삶’</a></li><li data-title="남해군, 2026년 7월 1일 기준 개별공시지가 결정·공시"><span class="tag news">뉴스</span><a href="https://www.newsgn.com/news/articleView.html?idxno=581876" target="_blank">남해군, 2026년 7월 1일 기준 개별공시지가 결정·공시</a></li><li data-title="이지스자산운용, 증권부문 대표에 서성용 선임…멀티에셋 전략 강화"><span class="tag news">뉴스</span><a href="http://www.press9.kr/news/articleView.html?idxno=85078" target="_blank">이지스자산운용, 증권부문 대표에 서성용 선임…멀티에셋 전략 강화</a></li><li data-title="최상층을 커뮤니티로...지방도 눈길가네"><span class="tag news">뉴스</span><a href="https://www.fnnews.com/news/202610281014468602" target="_blank">최상층을 커뮤니티로...지방도 눈길가네</a></li><li data-title="“친구한테 말하면 자랑, 꽤 외로워”…‘자산 90억원’ 삼전 직원의 고..."><span class="tag news">뉴스</span><a href="https://www.mk.co.kr/article/12188212" target="_blank">“친구한테 말하면 자랑, 꽤 외로워”…‘자산 90억원’ 삼전 직원의 고...</a></li><li data-title="&quot;생체 간이식은 한국뿐&quot;…1만㎞ 날아온 미국인"><span class="tag news">뉴스</span><a href="https://www.newsis.com/view/NISX20261028_0003844415" target="_blank">"생체 간이식은 한국뿐"…1만㎞ 날아온 미국인</a></li><li data-title="[지식산업센터 돋보기] 한화, '시그니처 광교 2차' 할인 분양…PF 만기 ..."><span class="tag news">뉴스</span><a href="https://dealsite.co.kr/articles/171102" target="_blank">[지식산업센터 돋보기] 한화, '시그니처 광교 2차' 할인 분양…PF 만기 ...</a></li><li data-title="분양가상한제·서울 접근성 갖춘 3기신도시 첫 타자 '계양신도시' 주목"><span class="tag news">뉴스</span><a href="https://www.apnews.kr/news/articleView.html?idxno=3052552" target="_blank">분양가상한제·서울 접근성 갖춘 3기신도시 첫 타자 '계양신도시' 주목</a></li><li data-title="한국토지신탁-간삼건축, 도심복합개발 신규 사업지 발굴"><span class="tag news">뉴스</span><a href="https://www.newsis.com/view/NISX20261028_0003844443" target="_blank">한국토지신탁-간삼건축, 도심복합개발 신규 사업지 발굴</a></li><li data-title="서울 전세가 39개월째 상승…강북 첫 6억 돌파 [부동산360]"><span class="tag news">뉴스</span><a href="https://biz.heraldcorp.com/article/10917379?ref=naver" target="_blank">서울 전세가 39개월째 상승…강북 첫 6억 돌파 [부동산360]</a></li><li data-title="이지스자산운용, 서성용 증권부문 대표 선임"><span class="tag news">뉴스</span><a href="https://biz.heraldcorp.com/article/10917380?ref=naver" target="_blank">이지스자산운용, 서성용 증권부문 대표 선임</a></li><li data-title="구마모토는 반도체로 어떻게 바뀌었나…30일 광주서 국제컨퍼런스"><span class="tag news">뉴스</span><a href="https://www.hankyung.com/article/202610280210i" target="_blank">구마모토는 반도체로 어떻게 바뀌었나…30일 광주서 국제컨퍼런스</a></li><li data-title="주거지 선택 1순위는 교육 여건… '두산위브 트리니뷰 구명역' 관심"><span class="tag news">뉴스</span><a href="https://www.apnews.kr/news/articleView.html?idxno=3052550" target="_blank">주거지 선택 1순위는 교육 여건… '두산위브 트리니뷰 구명역' 관심</a></li><li data-title="서울 영등포구, 11월18일 청년 대상 '연말정산 특강' 개최"><span class="tag news">뉴스</span><a href="https://www.dailian.co.kr/news/view/1707250/?sc=Naver" target="_blank">서울 영등포구, 11월18일 청년 대상 '연말정산 특강' 개최</a></li><li data-title="[신용등급의 이면⑭] HDC현대산업개발, '깜짝 실적' 이면의 과제…PF 우..."><span class="tag news">뉴스</span><a href="https://news.ifm.kr/news/articleView.html?idxno=482816" target="_blank">[신용등급의 이면⑭] HDC현대산업개발, '깜짝 실적' 이면의 과제…PF 우...</a></li><li data-title="자산 90억 모은 40대 삼성 직원 &quot;돈 있어도 외롭다... 말할 사람 없어&quot;"><span class="tag news">뉴스</span><a href="https://www.insight.co.kr/news/579485" target="_blank">자산 90억 모은 40대 삼성 직원 "돈 있어도 외롭다... 말할 사람 없어"</a></li><li data-title="“71번 열어 VVIP 650명 맞았다”…신한투자증권, 스카이박스 3년째 운영"><span class="tag news">뉴스</span><a href="https://www.ddaily.co.kr/page/view/2026102810583055449" target="_blank">“71번 열어 VVIP 650명 맞았다”…신한투자증권, 스카이박스 3년째 운영</a></li><li data-title="'절대수익 승부수' 이지스운용, 서성용 증권부문 대표 신규 선임"><span class="tag news">뉴스</span><a href="https://www.widedaily.com/news/articleView.html?idxno=302400" target="_blank">'절대수익 승부수' 이지스운용, 서성용 증권부문 대표 신규 선임</a></li><li data-title="무안군, 토지이동 발생 5491필지 공시지가 확정…이의신청 접수"><span class="tag news">뉴스</span><a href="https://www.shinailbo.co.kr/news/articleView.html?idxno=5076824" target="_blank">무안군, 토지이동 발생 5491필지 공시지가 확정…이의신청 접수</a></li><li data-title="69세 美자선사업가, 한국 17시간 간이식 성공"><span class="tag news">뉴스</span><a href="https://www.dailymedi.com/news/news_view.php?wr_id=941966" target="_blank">69세 美자선사업가, 한국 17시간 간이식 성공</a></li><li data-title="&quot;최고 의사는 한국에&quot;…美자선사업가, 한국서 '17시간 간이식' 성공"><span class="tag news">뉴스</span><a href="https://www.dongascience.com/news/view/80572" target="_blank">"최고 의사는 한국에"…美자선사업가, 한국서 '17시간 간이식' 성공</a></li><li data-title="신도시 상가 공실 부담…'브랜드 상업시설' 차별화 전략"><span class="tag news">뉴스</span><a href="https://www.topdaily.kr/articles/112540" target="_blank">신도시 상가 공실 부담…'브랜드 상업시설' 차별화 전략</a></li><li data-title="완주군, 개별공시지가 결정·공시…1570필지 대상"><span class="tag news">뉴스</span><a href="https://www.newsis.com/view/NISX20261028_0003844420" target="_blank">완주군, 개별공시지가 결정·공시…1570필지 대상</a></li><li data-title="&quot;눈 먼 돈 날리던 주차장, AI로 분석하니 매출 2배 뛰었다&quot;"><span class="tag news">뉴스</span><a href="https://realty.chosun.com/site/data/html_dir/2026/10/28/2026102801462.html" target="_blank">"눈 먼 돈 날리던 주차장, AI로 분석하니 매출 2배 뛰었다"</a></li><li data-title="용인시, &quot;조정대상지역 2주택 취득세 유예기간 3년→2년 단축&quot; 주의 환기"><span class="tag news">뉴스</span><a href="https://www.jasm.co.kr/news/view/323227/?sc=Naver" target="_blank">용인시, "조정대상지역 2주택 취득세 유예기간 3년→2년 단축" 주의 환기</a></li><li data-title="금산군, 개별공시지가 공시…내달 27일까지 이의신청"><span class="tag news">뉴스</span><a href="https://www.newspim.com/news/view/20261028000542" target="_blank">금산군, 개별공시지가 공시…내달 27일까지 이의신청</a></li><li data-title="한국투자부동산신탁, 신대방동 605번지 일대 1700가구 주거단지 추진"><span class="tag news">뉴스</span><a href="https://www.fnnews.com/news/202610281046274102" target="_blank">한국투자부동산신탁, 신대방동 605번지 일대 1700가구 주거단지 추진</a></li><li data-title="한국토지신탁, 간삼건축과 맞손…도심복합개발 신규 사업지 발굴 나선다"><span class="tag news">뉴스</span><a href="https://biz.heraldcorp.com/article/10917348?ref=naver" target="_blank">한국토지신탁, 간삼건축과 맞손…도심복합개발 신규 사업지 발굴 나선다</a></li></ul>
+          </div>
+          <div class="full-view" style="display:none">
+            
+            <div class="dispatch" data-title="표예진부터 임수향까지 총출동…사랑·이별·성장 담은 8편 단막극 온다...">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">표예진부터 임수향까지 총출동…사랑·이별·성장 담은 8편 단막극 온다...</p>
+                <p class="d-summary">‘거짓말 거짓말 거짓말’(연출 배수경, 극본 마아림)은 인생 첫 독립을 앞두고 단기 임대 보증금 사기를 당한 안어진(서지혜 분)이 부동산 앱의 사기꾼 ‘피터팬007’을 찾아 나서며 벌어지는 이야기다. 김지우(박소이...</p>
+                <div class="d-meta">네이버뉴스 · 2026-10-28 11:04
+                  <a href="http://www.osen.co.kr/article/G1112899762" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="오산시, AI 활용 부동산 거래 위험 사전 점검...경기도와 공동 캠페인">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">오산시, AI 활용 부동산 거래 위험 사전 점검...경기도와 공동 캠페인</p>
+                <p class="d-summary">오산시가 전세사기 등 부동산 거래 피해를 줄이기 위해 인공지능을 활용한 위험요소 사전 점검과 현장 예방... 오산시는 경기도와 협력해 오는 11월 2일부터 27일까지 4주간 '경기 안심 부동산' 캠페인을 추진한다고 밝혔다....</p>
+                <div class="d-meta">네이버뉴스 · 2026-10-28 11:04
+                  <a href="https://www.kmaeil.com/news/articleView.html?idxno=656112" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="페루계 美자선사업가, 서울아산병원서 생체간이식 후 ‘새삶’">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">페루계 美자선사업가, 서울아산병원서 생체간이식 후 ‘새삶’</p>
+                <p class="d-summary">28일 서울아산병원에 따르면 마르코 씨는 미국과 페루를 오가며 부동산 건설 사업과 자선사업을 활발히 펼쳐왔다. 부동산 건설 사업으로 얻은 수익을 바탕으로 양로원 노인이나 저소득층 가정, 투병 중인 환아 등에게...</p>
+                <div class="d-meta">네이버뉴스 · 2026-10-28 11:04
+                  <a href="https://www.etoday.co.kr/news/view/2641049" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="남해군, 2026년 7월 1일 기준 개별공시지가 결정·공시">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">남해군, 2026년 7월 1일 기준 개별공시지가 결정·공시</p>
+                <p class="d-summary">결정·공시된 개별공시지가는 '부동산공시가격알리미' 홈페이지를 통해 열람하거나, 읍·면 행정복지센터... 열람 후 이의가 있는 토지소유자, 이해관계인은 개별공시지가 이의신청서를 작성하여 '부동산가격공시알리...</p>
+                <div class="d-meta">네이버뉴스 · 2026-10-28 11:04
+                  <a href="https://www.newsgn.com/news/articleView.html?idxno=581876" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="이지스자산운용, 증권부문 대표에 서성용 선임…멀티에셋 전략 강화">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">이지스자산운용, 증권부문 대표에 서성용 선임…멀티에셋 전략 강화</p>
+                <p class="d-summary">이후 코람코자산운용에서 멀티에셋운용팀을 구성해 상장 리츠 등 부동산 관련 자산을 결합한 펀드를 운용했다. 2022년 이지스자산운용에 합류한 뒤에는 멀티에셋투자파트(현 헤지펀드운용파트)를 이끌었다....</p>
+                <div class="d-meta">네이버뉴스 · 2026-10-28 11:04
+                  <a href="http://www.press9.kr/news/articleView.html?idxno=85078" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="최상층을 커뮤니티로...지방도 눈길가네">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">최상층을 커뮤니티로...지방도 눈길가네</p>
+                <p class="d-summary">28일 부동산 업계에 따르면 최상층 특화 커뮤니티가 적용된 단지들은 청약 시장에서 인기가 높다. 올해 4월 서울 서초구 서초동 일원에 공급된 '아크로 서초'는 1순위 청약에서 30가구 모집에 3만2973명이 접수하며...</p>
+                <div class="d-meta">네이버뉴스 · 2026-10-28 11:03
+                  <a href="https://www.fnnews.com/news/202610281014468602" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="“친구한테 말하면 자랑, 꽤 외로워”…‘자산 90억원’ 삼전 직원의 고...">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">“친구한테 말하면 자랑, 꽤 외로워”…‘자산 90억원’ 삼전 직원의 고...</p>
+                <p class="d-summary">부동산과 주식·가상자산 투자에 성공해 자산가 반열에 올랐지만 불안하다는 직장인의 사연이 온라인상에서... 지금은 구성이 많이 바뀌었지만 부동산, 주식, 코인 전부 해 봤다. 투자 과정에서 몇 차례 중요한 판단을 내린...</p>
+                <div class="d-meta">네이버뉴스 · 2026-10-28 11:03
+                  <a href="https://www.mk.co.kr/article/12188212" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="&quot;생체 간이식은 한국뿐&quot;…1만㎞ 날아온 미국인">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">"생체 간이식은 한국뿐"…1만㎞ 날아온 미국인</p>
+                <p class="d-summary">마르코씨는 미국과 페루를 오가며 부동산 건설 사업과 자선사업을 활발히 펼쳐왔다. 부동산 건설 사업으로 얻은 수익을 바탕으로 양로원 노인이나 저소득층 가정, 투병 중인 환아 등 도움이 필요한 곳이면 가리지 않고...</p>
+                <div class="d-meta">네이버뉴스 · 2026-10-28 11:02
+                  <a href="https://www.newsis.com/view/NISX20261028_0003844415" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="[지식산업센터 돋보기] 한화, '시그니처 광교 2차' 할인 분양…PF 만기 ...">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">[지식산업센터 돋보기] 한화, '시그니처 광교 2차' 할인 분양…PF 만기 ...</p>
+                <p class="d-summary">이에 한화그룹 계열 부동산 시행사 에이치씨앤디(HC&D)는 올해 3월 사업 시행법인까지 확보하며 직접 사업 정상화에 나섰다. 당시 PF대출 약정 규모는 최대 520억원이다. 한화는 올해 3월 시행법인을 확보한 뒤 기존 계약...</p>
+                <div class="d-meta">네이버뉴스 · 2026-10-28 11:02
+                  <a href="https://dealsite.co.kr/articles/171102" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="분양가상한제·서울 접근성 갖춘 3기신도시 첫 타자 '계양신도시' 주목">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">분양가상한제·서울 접근성 갖춘 3기신도시 첫 타자 '계양신도시' 주목</p>
+                <p class="d-summary">부동산 업계 및 실거래가 자료 분석에 따르면 2기 신도시인 동탄과 판교의 가격 변동폭이 두드러졌다. 동탄 신도시 초기 공급 아파트인 '동탄역 시범우남퍼스트빌'은 초기 분양가 3억 4000만 원에서 최근 18억 6000만 원...</p>
+                <div class="d-meta">네이버뉴스 · 2026-10-28 11:02
+                  <a href="https://www.apnews.kr/news/articleView.html?idxno=3052552" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="한국토지신탁-간삼건축, 도심복합개발 신규 사업지 발굴">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">한국토지신탁-간삼건축, 도심복합개발 신규 사업지 발굴</p>
+                <p class="d-summary">한국토지신탁은 부동산신탁사 중 가장 많은 정비사업 전문인력을 바탕으로 수도권 주요 사업지에서... 간삼건축 관계자는 "이번 협약을 통해 간삼건축의 설계 역량과 한국토지신탁의 부동산 개발 전문성이 시너지를 낼 수...</p>
+                <div class="d-meta">네이버뉴스 · 2026-10-28 11:01
+                  <a href="https://www.newsis.com/view/NISX20261028_0003844443" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="서울 전세가 39개월째 상승…강북 첫 6억 돌파 [부동산360]">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">서울 전세가 39개월째 상승…강북 첫 6억 돌파 [부동산360]</p>
+                <p class="d-summary">KB부동산 월간 아파트 평균 전세가격 강북 6억281만원, 강남 8억4178만원 서울 아파트 평균 전세가격이... 28일 KB부동산에 따르면, 이달 서울 아파트 전셋값은 7억2898만원으로 집계됐다. 지난해 12월 말...</p>
+                <div class="d-meta">네이버뉴스 · 2026-10-28 11:01
+                  <a href="https://biz.heraldcorp.com/article/10917379?ref=naver" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="이지스자산운용, 서성용 증권부문 대표 선임">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">이지스자산운용, 서성용 증권부문 대표 선임</p>
+                <p class="d-summary">코람코자산운용에선 멀티에셋운용팀을 구성해 상장리츠 등 부동산 관련 자산을 결합한 펀드를 운용했다. 2022년 이지스자산운용에 합류한 뒤에는 멀티에셋투자파트(현 헤지펀드운용파트)를 이끌며 주식·채권·공모주...</p>
+                <div class="d-meta">네이버뉴스 · 2026-10-28 11:01
+                  <a href="https://biz.heraldcorp.com/article/10917380?ref=naver" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="구마모토는 반도체로 어떻게 바뀌었나…30일 광주서 국제컨퍼런스">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">구마모토는 반도체로 어떻게 바뀌었나…30일 광주서 국제컨퍼런스</p>
+                <p class="d-summary">한국디벨로퍼협회 호남지회와 한국부동산개발산업연구원은 오는 30일 오후 1시 광주MBC 공개홀에서 ‘반도체... 이어지는 라운드테이블에서는 김현수 단국대 도시계획·부동산학부 교수가 좌장을 맡는다. 김승배...</p>
+                <div class="d-meta">네이버뉴스 · 2026-10-28 11:00
+                  <a href="https://www.hankyung.com/article/202610280210i" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="주거지 선택 1순위는 교육 여건… '두산위브 트리니뷰 구명역' 관심">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">주거지 선택 1순위는 교육 여건… '두산위브 트리니뷰 구명역' 관심</p>
+                <p class="d-summary">부동산R114가 전국 성인남녀 5천46명을 대상으로 조사한 내 집 마련 수요자 인식 조사 결과에 따르면, 전체 응답자의 29.73%가 거주지를 고를 때 가장 중요하게 보는 요인으로 학교와의 거리 등 교육 환경을 꼽았다. 또한...</p>
+                <div class="d-meta">네이버뉴스 · 2026-10-28 11:00
+                  <a href="https://www.apnews.kr/news/articleView.html?idxno=3052550" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="서울 영등포구, 11월18일 청년 대상 '연말정산 특강' 개최">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">서울 영등포구, 11월18일 청년 대상 '연말정산 특강' 개최</p>
+                <p class="d-summary">영등포구는 올해 7월부터 예금보험공사, 금융감독원, 한국부동산원, 서민금융진흥원 등과 협력해 청년 대상 경제교육을 이어왔다. 구 관계자는 "복잡한 연말정산을 쉽게 이해하고, 몰라서 놓치기 쉬운 권리를 챙길 수...</p>
+                <div class="d-meta">네이버뉴스 · 2026-10-28 11:00
+                  <a href="https://www.dailian.co.kr/news/view/1707250/?sc=Naver" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="[신용등급의 이면⑭] HDC현대산업개발, '깜짝 실적' 이면의 과제…PF 우...">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">[신용등급의 이면⑭] HDC현대산업개발, '깜짝 실적' 이면의 과제…PF 우...</p>
+                <p class="d-summary">아울러 부동산 PF 관련 보증 위험도 지속적인 관찰 대상이다. 반기보고서 주석에 따르면, HDC현대산업개발의 부동산 PF(대출) 보증 잔액은 1조2886억원 수준이며 도급사업 및 기타 사업장에서 제공한 책임준공 약정 및...</p>
+                <div class="d-meta">네이버뉴스 · 2026-10-28 11:00
+                  <a href="https://news.ifm.kr/news/articleView.html?idxno=482816" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="자산 90억 모은 40대 삼성 직원 &quot;돈 있어도 외롭다... 말할 사람 없어&quot;">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">자산 90억 모은 40대 삼성 직원 "돈 있어도 외롭다... 말할 사람 없어"</p>
+                <p class="d-summary">A 씨는 지난 10년 동안 부동산과 주식, 가상자산 등 다양한 투자처에 자금을 넣었으며, 몇 년 전의 결정적인 판단이 현재의 자산 축적으로 이어졌다고 설명했다. A 씨가 가장 힘들어하는 것은 고민을 나눌 상대가 없다는...</p>
+                <div class="d-meta">네이버뉴스 · 2026-10-28 11:00
+                  <a href="https://www.insight.co.kr/news/579485" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="“71번 열어 VVIP 650명 맞았다”…신한투자증권, 스카이박스 3년째 운영">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">“71번 열어 VVIP 650명 맞았다”…신한투자증권, 스카이박스 3년째 운영</p>
+                <p class="d-summary">세무와 부동산, 상속·증여, 연금 등 전문 자문서비스에 차량 의전과 생활 편의 혜택을 결합한 것이 특징이다. 올해는 문화 프로그램도 확대하고 있다. 지난 3월에는 프라이빗 문화예술 프로그램인 ‘신한 Premier...</p>
+                <div class="d-meta">네이버뉴스 · 2026-10-28 10:59
+                  <a href="https://www.ddaily.co.kr/page/view/2026102810583055449" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="'절대수익 승부수' 이지스운용, 서성용 증권부문 대표 신규 선임">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">'절대수익 승부수' 이지스운용, 서성용 증권부문 대표 신규 선임</p>
+                <p class="d-summary">50세인 서 신임 대표는 성균관대학교에서 경제학과 경영학을 전공한 뒤 건국대 부동산대학원에서 석사... 이어 2018년 코람코자산운용으로 이직해 멀티에셋운용팀을 신설하고 상장리츠 등 부동산 자산을 결합한 펀드를...</p>
+                <div class="d-meta">네이버뉴스 · 2026-10-28 10:58
+                  <a href="https://www.widedaily.com/news/articleView.html?idxno=302400" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="무안군, 토지이동 발생 5491필지 공시지가 확정…이의신청 접수">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">무안군, 토지이동 발생 5491필지 공시지가 확정…이의신청 접수</p>
+                <p class="d-summary">군은 2026년 7월 1일을 기준으로 개별공시지가를 조사·산정한 뒤 무안군 부동산가격공시위원회 심의를 거쳤다. 토지 소유자 등은 부동산공시가격알리미를 통해 공시지가를 확인할 수 있다. 무안군청 민원지적과에...</p>
+                <div class="d-meta">네이버뉴스 · 2026-10-28 10:58
+                  <a href="https://www.shinailbo.co.kr/news/articleView.html?idxno=5076824" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="69세 美자선사업가, 한국 17시간 간이식 성공">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">69세 美자선사업가, 한국 17시간 간이식 성공</p>
+                <p class="d-summary">마르코 씨는 미국과 페루를 오가며 부동산 건설 사업과 자선사업을 펼쳐왔다. 사업으로 얻은 수익을 바탕으로 양로원 노인이나 저소득층 가정, 투병 중인 환아 등을 후원해 왔다. 지난 2008년 페루에서 담낭 제거 수술을...</p>
+                <div class="d-meta">네이버뉴스 · 2026-10-28 10:58
+                  <a href="https://www.dailymedi.com/news/news_view.php?wr_id=941966" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="&quot;최고 의사는 한국에&quot;…美자선사업가, 한국서 '17시간 간이식' 성공">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">"최고 의사는 한국에"…美자선사업가, 한국서 '17시간 간이식' 성공</p>
+                <p class="d-summary">마르코 씨는 미국과 페루를 오가며 부동산 건설 사업과 자선사업을 펼쳐왔다. 사업으로 얻은 수익을 바탕으로 양로원 노인이나 저소득층 가정, 투병 중인 환아 등 도움이 필요한 곳에 물품과 금전적 후원을 해왔다. 지난...</p>
+                <div class="d-meta">네이버뉴스 · 2026-10-28 10:58
+                  <a href="https://www.dongascience.com/news/view/80572" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="신도시 상가 공실 부담…'브랜드 상업시설' 차별화 전략">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">신도시 상가 공실 부담…'브랜드 상업시설' 차별화 전략</p>
+                <p class="d-summary">28일 한국부동산원의 상업용부동산 임대동향조사에 따르면 올해 2분기 전국 중대형상가 공실률은 14.33%를 기록했다. 전분기(12.98%) 대비 상승한 기록을 나타내며 높은 수준을 보이고 있다. 2분기 집합상가 공실률은 10.5%로...</p>
+                <div class="d-meta">네이버뉴스 · 2026-10-28 10:54
+                  <a href="https://www.topdaily.kr/articles/112540" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="완주군, 개별공시지가 결정·공시…1570필지 대상">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">완주군, 개별공시지가 결정·공시…1570필지 대상</p>
+                <p class="d-summary">개별공시지가는 부동산공시가격알리미 누리집에서 열람할 수 있으며, 공시지가에 이의가 있는... 접수된 이의신청은 토지특성 재조사와 감정평가사의 검증, 완주군 부동산가격공시위원회 심의 등의 절차를 거쳐...</p>
+                <div class="d-meta">네이버뉴스 · 2026-10-28 10:54
+                  <a href="https://www.newsis.com/view/NISX20261028_0003844420" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="&quot;눈 먼 돈 날리던 주차장, AI로 분석하니 매출 2배 뛰었다&quot;">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">"눈 먼 돈 날리던 주차장, AI로 분석하니 매출 2배 뛰었다"</p>
+                <p class="d-summary">하지만 입출차 데이터를 AI로 분석한 뒤 개선 전략을 적용하니, 매출이 기존 대비 80% 정도 뛰면서 알짜로 급부상했죠.” 일본 부동산 시장에서 주차장은 아파트나 오피스처럼 핵심 부동산 상품군으로 통한다. 상장한...</p>
+                <div class="d-meta">네이버뉴스 · 2026-10-28 10:54
+                  <a href="https://realty.chosun.com/site/data/html_dir/2026/10/28/2026102801462.html" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="용인시, &quot;조정대상지역 2주택 취득세 유예기간 3년→2년 단축&quot; 주의 환기">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">용인시, "조정대상지역 2주택 취득세 유예기간 3년→2년 단축" 주의 환기</p>
+                <p class="d-summary">조정대상지역은 주택 가격 상승률이 물가상승률을 크게 웃도는 등 부동산 시장의 과열 조짐이 보일 때, 국토교통부가 부동산 시장 안정화를 위해 주택법에 의거해 지정하는 규제지역이다. 28일 시에 따르면 현재...</p>
+                <div class="d-meta">네이버뉴스 · 2026-10-28 10:52
+                  <a href="https://www.jasm.co.kr/news/view/323227/?sc=Naver" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="금산군, 개별공시지가 공시…내달 27일까지 이의신청">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">금산군, 개별공시지가 공시…내달 27일까지 이의신청</p>
+                <p class="d-summary">군은 해당 토지의 가격을 산정한 뒤 감정평가사의 검증과 부동산가격공시위원회 심의를 거쳐 최종 공시지가를 확정했다. 토지별 공시지가는 금산군청 민원지적과를 방문하거나 부동산공시가격알리미에서 확인할 수...</p>
+                <div class="d-meta">네이버뉴스 · 2026-10-28 10:52
+                  <a href="https://www.newspim.com/news/view/20261028000542" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="한국투자부동산신탁, 신대방동 605번지 일대 1700가구 주거단지 추진">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">한국투자부동산신탁, 신대방동 605번지 일대 1700가구 주거단지 추진</p>
+                <p class="d-summary">한국투자부동산신탁이 서울 동작구 신대방동 605번지 일대에서 약 1700가구 규모의 주거단지 조성을 추진한다. 한국금융지주 자회사 한국투자부동산신탁은 신대방동 605번지 일대 민간도심복합개발사업 운영위원회와...</p>
+                <div class="d-meta">네이버뉴스 · 2026-10-28 10:52
+                  <a href="https://www.fnnews.com/news/202610281046274102" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="한국토지신탁, 간삼건축과 맞손…도심복합개발 신규 사업지 발굴 나선다">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">한국토지신탁, 간삼건축과 맞손…도심복합개발 신규 사업지 발굴 나선다</p>
+                <p class="d-summary">한국토지신탁은 부동산신탁사 중 가장 많은 정비사업 전문 인력을 보유하고 있으며, 올해 2분기 기준 전국... 한편 한국토지신탁은 1996년에 설립돼 가장 오랜 업력을 갖고 있는 대한민국 대표 부동산신탁사로, 주요...</p>
+                <div class="d-meta">네이버뉴스 · 2026-10-28 10:51
+                  <a href="https://biz.heraldcorp.com/article/10917348?ref=naver" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <p class="empty">오늘 수집된 공시가 없습니다.</p>
+          </div>
+        </div>
+        
+  <div class="archive">
+    <a class="today-link" href="/daily-briefing/index.html">오늘 리포트로 돌아가기</a>
+    &nbsp;|&nbsp;
+    <label for="dateSelect">다른 날짜 선택: </label>
+    <select id="dateSelect" onchange="if(this.value) window.location.href = this.value;">
+      <option value="/daily-briefing/index.html">오늘 · 2026-10-28</option><option value="/daily-briefing/archive/2026-10-27.html">2026-10-27</option><option value="/daily-briefing/archive/2026-10-26.html">2026-10-26</option><option value="/daily-briefing/archive/2026-10-25.html">2026-10-25</option><option value="/daily-briefing/archive/2026-10-24.html">2026-10-24</option><option value="/daily-briefing/archive/2026-10-23.html">2026-10-23</option><option value="/daily-briefing/archive/2026-10-22.html">2026-10-22</option><option value="/daily-briefing/archive/2026-10-21.html">2026-10-21</option><option value="/daily-briefing/archive/2026-10-20.html">2026-10-20</option><option value="/daily-briefing/archive/2026-10-19.html">2026-10-19</option><option value="/daily-briefing/archive/2026-10-18.html">2026-10-18</option><option value="/daily-briefing/archive/2026-10-17.html">2026-10-17</option><option value="/daily-briefing/archive/2026-10-16.html">2026-10-16</option><option value="/daily-briefing/archive/2026-10-15.html">2026-10-15</option><option value="/daily-briefing/archive/2026-10-14.html">2026-10-14</option><option value="/daily-briefing/archive/2026-10-13.html">2026-10-13</option><option value="/daily-briefing/archive/2026-10-12.html">2026-10-12</option><option value="/daily-briefing/archive/2026-10-11.html">2026-10-11</option><option value="/daily-briefing/archive/2026-10-10.html">2026-10-10</option><option value="/daily-briefing/archive/2026-10-09.html">2026-10-09</option><option value="/daily-briefing/archive/2026-10-08.html">2026-10-08</option><option value="/daily-briefing/archive/2026-10-07.html">2026-10-07</option><option value="/daily-briefing/archive/2026-10-06.html">2026-10-06</option><option value="/daily-briefing/archive/2026-10-05.html">2026-10-05</option><option value="/daily-briefing/archive/2026-10-04.html">2026-10-04</option><option value="/daily-briefing/archive/2026-10-03.html">2026-10-03</option><option value="/daily-briefing/archive/2026-10-02.html">2026-10-02</option><option value="/daily-briefing/archive/2026-10-01.html">2026-10-01</option><option value="/daily-briefing/archive/2026-09-30.html">2026-09-30</option><option value="/daily-briefing/archive/2026-09-29.html">2026-09-29</option><option value="/daily-briefing/archive/2026-09-28.html">2026-09-28</option><option value="/daily-briefing/archive/2026-09-27.html">2026-09-27</option><option value="/daily-briefing/archive/2026-09-26.html">2026-09-26</option><option value="/daily-briefing/archive/2026-09-25.html">2026-09-25</option><option value="/daily-briefing/archive/2026-09-24.html">2026-09-24</option><option value="/daily-briefing/archive/2026-09-23.html">2026-09-23</option><option value="/daily-briefing/archive/2026-09-22.html">2026-09-22</option><option value="/daily-briefing/archive/2026-09-21.html">2026-09-21</option><option value="/daily-briefing/archive/2026-09-20.html">2026-09-20</option><option value="/daily-briefing/archive/2026-09-19.html">2026-09-19</option><option value="/daily-briefing/archive/2026-09-18.html">2026-09-18</option><option value="/daily-briefing/archive/2026-09-17.html">2026-09-17</option><option value="/daily-briefing/archive/2026-09-16.html">2026-09-16</option><option value="/daily-briefing/archive/2026-09-15.html">2026-09-15</option><option value="/daily-briefing/archive/2026-09-14.html">2026-09-14</option><option value="/daily-briefing/archive/2026-09-13.html">2026-09-13</option><option value="/daily-briefing/archive/2026-09-12.html">2026-09-12</option><option value="/daily-briefing/archive/2026-09-11.html">2026-09-11</option><option value="/daily-briefing/archive/2026-09-10.html">2026-09-10</option><option value="/daily-briefing/archive/2026-09-09.html">2026-09-09</option><option value="/daily-briefing/archive/2026-09-08.html">2026-09-08</option><option value="/daily-briefing/archive/2026-09-07.html">2026-09-07</option><option value="/daily-briefing/archive/2026-09-06.html">2026-09-06</option><option value="/daily-briefing/archive/2026-09-05.html">2026-09-05</option><option value="/daily-briefing/archive/2026-09-04.html">2026-09-04</option><option value="/daily-briefing/archive/2026-09-03.html">2026-09-03</option><option value="/daily-briefing/archive/2026-09-02.html">2026-09-02</option><option value="/daily-briefing/archive/2026-09-01.html">2026-09-01</option><option value="/daily-briefing/archive/2026-08-31.html">2026-08-31</option><option value="/daily-briefing/archive/2026-08-30.html">2026-08-30</option><option value="/daily-briefing/archive/2026-08-29.html">2026-08-29</option><option value="/daily-briefing/archive/2026-08-28.html">2026-08-28</option><option value="/daily-briefing/archive/2026-08-27.html">2026-08-27</option><option value="/daily-briefing/archive/2026-08-26.html">2026-08-26</option><option value="/daily-briefing/archive/2026-08-25.html">2026-08-25</option><option value="/daily-briefing/archive/2026-08-24.html">2026-08-24</option><option value="/daily-briefing/archive/2026-08-23.html">2026-08-23</option><option value="/daily-briefing/archive/2026-08-22.html">2026-08-22</option><option value="/daily-briefing/archive/2026-08-21.html">2026-08-21</option><option value="/daily-briefing/archive/2026-08-20.html">2026-08-20</option><option value="/daily-briefing/archive/2026-08-19.html">2026-08-19</option><option value="/daily-briefing/archive/2026-08-18.html">2026-08-18</option><option value="/daily-briefing/archive/2026-08-17.html">2026-08-17</option><option value="/daily-briefing/archive/2026-08-16.html">2026-08-16</option><option value="/daily-briefing/archive/2026-08-15.html">2026-08-15</option><option value="/daily-briefing/archive/2026-08-14.html">2026-08-14</option><option value="/daily-briefing/archive/2026-08-13.html">2026-08-13</option><option value="/daily-briefing/archive/2026-08-12.html">2026-08-12</option><option value="/daily-briefing/archive/2026-08-11.html">2026-08-11</option><option value="/daily-briefing/archive/2026-08-10.html">2026-08-10</option><option value="/daily-briefing/archive/2026-08-09.html">2026-08-09</option><option value="/daily-briefing/archive/2026-08-08.html">2026-08-08</option><option value="/daily-briefing/archive/2026-08-07.html">2026-08-07</option><option value="/daily-briefing/archive/2026-08-06.html">2026-08-06</option><option value="/daily-briefing/archive/2026-08-05.html">2026-08-05</option><option value="/daily-briefing/archive/2026-08-04.html">2026-08-04</option><option value="/daily-briefing/archive/2026-08-03.html">2026-08-03</option><option value="/daily-briefing/archive/2026-08-02.html">2026-08-02</option><option value="/daily-briefing/archive/2026-08-01.html">2026-08-01</option><option value="/daily-briefing/archive/2026-07-31.html">2026-07-31</option><option value="/daily-briefing/archive/2026-07-30.html">2026-07-30</option><option value="/daily-briefing/archive/2026-07-29.html">2026-07-29</option><option value="/daily-briefing/archive/2026-07-28.html">2026-07-28</option><option value="/daily-briefing/archive/2026-07-27.html">2026-07-27</option><option value="/daily-briefing/archive/2026-07-26.html">2026-07-26</option><option value="/daily-briefing/archive/2026-07-25.html">2026-07-25</option><option value="/daily-briefing/archive/2026-07-24.html">2026-07-24</option><option value="/daily-briefing/archive/2026-07-23.html">2026-07-23</option><option value="/daily-briefing/archive/2026-07-22.html">2026-07-22</option><option value="/daily-briefing/archive/2026-07-21.html">2026-07-21</option><option value="/daily-briefing/archive/2026-07-20.html">2026-07-20</option><option value="/daily-briefing/archive/2026-07-19.html">2026-07-19</option><option value="/daily-briefing/archive/2026-07-18.html">2026-07-18</option><option value="/daily-briefing/archive/2026-07-17.html">2026-07-17</option><option value="/daily-briefing/archive/2026-07-16.html">2026-07-16</option><option value="/daily-briefing/archive/2026-07-15.html">2026-07-15</option><option value="/daily-briefing/archive/2026-07-14.html">2026-07-14</option><option value="/daily-briefing/archive/2026-07-13.html">2026-07-13</option><option value="/daily-briefing/archive/2026-07-12.html">2026-07-12</option><option value="/daily-briefing/archive/2026-07-11.html">2026-07-11</option><option value="/daily-briefing/archive/2026-07-10.html">2026-07-10</option><option value="/daily-briefing/archive/2026-07-09.html">2026-07-09</option><option value="/daily-briefing/archive/2026-07-08.html">2026-07-08</option><option value="/daily-briefing/archive/2026-07-07.html">2026-07-07</option>
+    </select>
+  </div>
+</div>
+<script>
+function showTab(kw) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.kw === kw));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.dataset.kw === kw));
+  document.getElementById('search').value = '';
+  filterItems();
+}
+function showView(kw, view) {
+  const panel = document.querySelector('.tab-panel[data-kw="' + kw + '"]');
+  panel.querySelectorAll('.view-toggle button').forEach(b => b.classList.toggle('active', b.dataset.view === view));
+  panel.querySelector('.summary-view').style.display = view === 'summary' ? 'block' : 'none';
+  panel.querySelector('.full-view').style.display = view === 'full' ? 'block' : 'none';
+  panel.querySelector('.report-view').style.display = view === 'report' ? 'block' : 'none';
+}
+function filterItems() {
+  const q = document.getElementById('search').value.trim().toLowerCase();
+  document.querySelectorAll('.tab-panel.active [data-title]').forEach(el => {
+    const match = el.dataset.title.toLowerCase().includes(q);
+    el.style.display = match ? '' : 'none';
+  });
+}
+function requestKeyword(action) {
+  const kw = document.getElementById('kw-input').value.trim();
+  if (!kw) { alert('키워드를 입력해주세요.'); return; }
+  const title = encodeURIComponent(action + ': ' + kw);
+  const url = 'https://github.com/dhur3/daily-briefing/issues/new?title=' + title;
+  window.open(url, '_blank');
+}
+</script>
+</body>
+</html>
