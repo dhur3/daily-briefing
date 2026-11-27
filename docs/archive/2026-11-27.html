@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>오늘의 부동산 뉴스 — 2026-11-27</title>
+<style>
+body { margin:0; background:#101B24; color:#EDE7D8; font-family: sans-serif; }
+.desk { max-width: 900px; margin: 0 auto; padding: 30px 20px 60px; }
+h1 { font-size: 24px; border-bottom: 2px solid #EDE7D8; padding-bottom: 12px; margin-bottom: 18px; }
+.tabs { display:flex; flex-wrap:wrap; gap:8px; margin-bottom: 14px; }
+.tab-btn { background: transparent; border:1px solid rgba(237,231,216,0.3); color:#EDE7D8;
+  padding:8px 14px; border-radius:20px; font-size:13.5px; cursor:pointer; }
+.tab-btn.active { background:#C99A3D; color:#16232E; border-color:#C99A3D; font-weight:600; }
+.search-row { margin-bottom: 22px; }
+.search-row input { width:100%; box-sizing:border-box; background:#16232E; border:1px solid rgba(237,231,216,0.2);
+  color:#EDE7D8; padding:10px 12px; border-radius:6px; font-size:14px; }
+.kw-manage { display:flex; gap:8px; margin-bottom: 26px; flex-wrap:wrap; }
+.kw-manage input { flex:1; min-width:160px; background:#16232E; border:1px solid rgba(237,231,216,0.2);
+  color:#EDE7D8; padding:9px 12px; border-radius:6px; font-size:13.5px; }
+.kw-manage button { border:none; border-radius:6px; padding:9px 14px; font-size:13px; cursor:pointer; }
+.kw-manage .add-btn { background:#5B8DBE; color:#16232E; }
+.kw-manage .remove-btn { background: transparent; border:1px solid rgba(237,231,216,0.3); color:#EDE7D8; }
+.kw-manage-note { font-size:11.5px; color:#5F5E5A; margin: -18px 0 24px; }
+.view-toggle { display:flex; gap:8px; margin: 6px 0 18px; }
+.view-toggle button { background: transparent; border:1px solid rgba(237,231,216,0.25); color:#93A4AF;
+  padding:6px 12px; border-radius:14px; font-size:12.5px; cursor:pointer; }
+.view-toggle button.active { color:#EDE7D8; border-color:#5B8DBE; }
+.report-box { background: rgba(201,154,61,0.1); border-left:3px solid #C99A3D; padding:16px 18px;
+  font-size:14.5px; line-height:1.8; white-space:pre-wrap; }
+.summary-list { list-style:none; padding:0; margin:0; }
+.summary-list li { padding:9px 0; border-top:1px solid rgba(237,231,216,0.1); font-size:13.5px; }
+.summary-list .tag { display:inline-block; width:34px; font-size:10.5px; color:#16232E; text-align:center;
+  border-radius:2px; margin-right:8px; }
+.summary-list .tag.news { background:#B5D4F4; }
+.summary-list .tag.disclosure { background:#FAC775; }
+.summary-list a { color:#EDE7D8; text-decoration:none; }
+.summary-list a:hover { color:#5B8DBE; }
+.dispatch { display:flex; gap:14px; padding:14px 0; border-top:1px solid rgba(237,231,216,0.12); }
+.stamp { flex-shrink:0; width:56px; text-align:center; font-size:11px; padding:4px 2px; border-radius:2px; color:#16232E; }
+.stamp.news { background:#B5D4F4; }
+.stamp.disclosure { background:#FAC775; }
+.d-title { font-weight:600; margin:0 0 4px; }
+.d-summary { font-size:13.5px; color:#C7CDD1; margin:0 0 6px; }
+.d-meta { font-size:12px; color:#93A4AF; }
+.d-meta a { color:#5B8DBE; margin-left:8px; }
+.empty { color:#93A4AF; font-size:14px; }
+.archive { margin-top:40px; font-size:13px; color:#93A4AF; }
+.archive a { color:#5B8DBE; margin-right:10px; }
+.archive .today-link { color:#C99A3D; font-weight:600; }
+.archive select { background:#16232E; color:#EDE7D8; border:1px solid rgba(237,231,216,0.25);
+  border-radius:6px; padding:6px 10px; font-size:13px; }
+.tab-panel { display:none; }
+.tab-panel.active { display:block; }
+</style>
+</head>
+<body>
+<div class="desk">
+  <h1>오늘의 부동산 뉴스 — 2026-11-27</h1>
+  <div class="tabs"><button class="tab-btn active" data-kw="부동산" onclick="showTab(this.dataset.kw)">부동산</button></div>
+  <div class="kw-manage">
+    <input id="kw-input" placeholder="키워드 입력 (예: 삼성전자)">
+    <button class="add-btn" onclick="requestKeyword('add')">추가 요청</button>
+    <button class="remove-btn" onclick="requestKeyword('remove')">삭제 요청</button>
+  </div>
+  <p class="kw-manage-note">버튼을 누르면 GitHub 이슈 작성 화면이 열립니다. 거기서 "Submit new issue"만 누르면 자동으로 반영돼요 (GitHub 로그인 필요).</p>
+  <div class="search-row"><input id="search" placeholder="제목으로 검색..." oninput="filterItems()"></div>
+  
+        <div class="tab-panel active" data-kw="부동산">
+          <div class="view-toggle">
+            <button data-view="report" onclick="showView('부동산','report')">데일리 리포트</button>
+            <button class="active" data-view="summary" onclick="showView('부동산','summary')">간단 요약 보기</button>
+            <button data-view="full" onclick="showView('부동산','full')">전체 원문 목록</button>
+          </div>
+          <div class="report-view" style="display:none">
+            <p class="empty">데일리 리포트(AI 요약)를 쓰려면 저장소 Secrets에 ANTHROPIC_API_KEY를 등록해주세요.</p>
+          </div>
+          <div class="summary-view">
+            <ul class="summary-list"><li data-title="부동산과 비트코인 결합…&quot;7~10년 뒤 8000억달러 규모 자산 만들 것&quot;"><span class="tag news">뉴스</span><a href="https://www.tokenpost.kr/news/cryptocurrency/445302" target="_blank">부동산과 비트코인 결합…"7~10년 뒤 8000억달러 규모 자산 만들 것"</a></li><li data-title="가계·기업대출 다 줄었는데…보험사 연체율 왜 오르나"><span class="tag news">뉴스</span><a href="https://www.mk.co.kr/article/12220087" target="_blank">가계·기업대출 다 줄었는데…보험사 연체율 왜 오르나</a></li><li data-title="반도체가 흔들리면 금융시장도 흔들린다…F4, 위험 전이 경로 점검"><span class="tag news">뉴스</span><a href="https://www.newsinside.kr/news/articleView.html?idxno=5057955" target="_blank">반도체가 흔들리면 금융시장도 흔들린다…F4, 위험 전이 경로 점검</a></li><li data-title="삼천리자산운용, 美 SCM 9억8천만달러 차환⋯위기 딛고 투자 정상화"><span class="tag news">뉴스</span><a href="https://www.autodaily.co.kr/news/articleView.html?idxno=602503" target="_blank">삼천리자산운용, 美 SCM 9억8천만달러 차환⋯위기 딛고 투자 정상화</a></li><li data-title="[정읍소식]지출 부가세 경정 청구, 환급받아 3억 확보 등"><span class="tag news">뉴스</span><a href="https://www.newsis.com/view/NISX20261127_0003886208" target="_blank">[정읍소식]지출 부가세 경정 청구, 환급받아 3억 확보 등</a></li><li data-title="[속보] 李 대통령 지지도 '7주 째 횡보'.. 민주·국힘 좁혀져"><span class="tag news">뉴스</span><a href="http://www.jmbc.co.kr/news/view_breakingnews/70098" target="_blank">[속보] 李 대통령 지지도 '7주 째 횡보'.. 민주·국힘 좁혀져</a></li><li data-title="BNK금융그룹, 자산관리 전문인력 육성으로 WM 경쟁력 강화"><span class="tag news">뉴스</span><a href="https://www.gukjenews.com/news/articleView.html?idxno=3765204" target="_blank">BNK금융그룹, 자산관리 전문인력 육성으로 WM 경쟁력 강화</a></li><li data-title="삼천리자산운용, 美 가스 인프라 9.8억달러 차환 성공"><span class="tag news">뉴스</span><a href="http://www.hansbiz.co.kr/news/articleView.html?idxno=888001" target="_blank">삼천리자산운용, 美 가스 인프라 9.8억달러 차환 성공</a></li><li data-title="李대통령 국정지지율 41%로 7주째 횡보···부정평가는 50%[한국갤럽]"><span class="tag news">뉴스</span><a href="https://www.smartbizn.com/news/articleView.html?idxno=160857" target="_blank">李대통령 국정지지율 41%로 7주째 횡보···부정평가는 50%[한국갤럽]</a></li><li data-title="한국부동산원, 건설사 4곳과 ‘2027년 온실가스 감축 협약’"><span class="tag news">뉴스</span><a href="https://biz.heraldcorp.com/article/10951821?ref=naver" target="_blank">한국부동산원, 건설사 4곳과 ‘2027년 온실가스 감축 협약’</a></li><li data-title="[오늘 뭐했니?] 한국부동산원"><span class="tag news">뉴스</span><a href="http://www.financialreview.co.kr/news/articleView.html?idxno=46660" target="_blank">[오늘 뭐했니?] 한국부동산원</a></li><li data-title="홈플러스 정상화 기다리는 상인들…기약 없는 휴업에 '한숨'"><span class="tag news">뉴스</span><a href="https://www.jnilbo.com/news/articleView.html?idxno=90000087296" target="_blank">홈플러스 정상화 기다리는 상인들…기약 없는 휴업에 '한숨'</a></li><li data-title="종부세 6조 원 고지…12월 15일 마감"><span class="tag news">뉴스</span><a href="https://www.topstarnews.net/news/articleView.html?idxno=16287813" target="_blank">종부세 6조 원 고지…12월 15일 마감</a></li><li data-title="팔려던 ‘알짜’ 계속 품고 간다…한화갤러리아, 타임월드 ‘재도약’..."><span class="tag news">뉴스</span><a href="https://www.fntimes.com/html/view.php?ud=2026112713091193b5b890e35c_18" target="_blank">팔려던 ‘알짜’ 계속 품고 간다…한화갤러리아, 타임월드 ‘재도약’...</a></li><li data-title="BNK금융, 자산관리 전문인력 육성"><span class="tag news">뉴스</span><a href="https://www.fnnews.com/news/202611271335157153" target="_blank">BNK금융, 자산관리 전문인력 육성</a></li><li data-title="‘외교 호평’ vs ‘민생·재판 발목’…李대통령 지지율 41%·부정 50% 7..."><span class="tag news">뉴스</span><a href="https://www.dt.co.kr/article/12097596?ref=naver" target="_blank">‘외교 호평’ vs ‘민생·재판 발목’…李대통령 지지율 41%·부정 50% 7...</a></li><li data-title="검찰미래위, 이번 주에도 李 연루 '위례 사건' 결론 못 내(종합)"><span class="tag news">뉴스</span><a href="https://www.news1.kr/society/court-prosecution/6368332" target="_blank">검찰미래위, 이번 주에도 李 연루 '위례 사건' 결론 못 내(종합)</a></li><li data-title="SK하닉으로 '2억→100억' 만든 95년생…&quot;5월에 싹 팔고 50억 용산집 샀다..."><span class="tag news">뉴스</span><a href="https://www.fnnews.com/news/202611271115015886" target="_blank">SK하닉으로 '2억→100억' 만든 95년생…"5월에 싹 팔고 50억 용산집 샀다...</a></li><li data-title="지역 대표 '자산관리 명가' 도약 속도낸다…BNK금융그룹, 예비 WM 전문인..."><span class="tag news">뉴스</span><a href="https://www.thefairnews.co.kr/news/articleView.html?idxno=95788" target="_blank">지역 대표 '자산관리 명가' 도약 속도낸다…BNK금융그룹, 예비 WM 전문인...</a></li><li data-title="BNK금융그룹, WM 전문인력 육성 돌입…그룹 공동 연수 개최"><span class="tag news">뉴스</span><a href="http://www.newsdream.kr/news/articleView.html?idxno=123206" target="_blank">BNK금융그룹, WM 전문인력 육성 돌입…그룹 공동 연수 개최</a></li><li data-title="강남구, 은마아파트 재건축부담금 관련 설명 자료 내놔"><span class="tag news">뉴스</span><a href="https://www.cnbizm.com/news/articleView.html?idxno=322947" target="_blank">강남구, 은마아파트 재건축부담금 관련 설명 자료 내놔</a></li><li data-title="지역 첫 브랜드부터 강남 대단지까지… 연말 분양 눈길"><span class="tag news">뉴스</span><a href="https://www.mediafine.co.kr/news/articleView.html?idxno=96078" target="_blank">지역 첫 브랜드부터 강남 대단지까지… 연말 분양 눈길</a></li><li data-title="롯데건설, 3조원대 베트남 복합개발 본격화…지분투자·스마트건설 연계..."><span class="tag news">뉴스</span><a href="https://www.upkoreanews.kr/news/articleView.html?idxno=101399" target="_blank">롯데건설, 3조원대 베트남 복합개발 본격화…지분투자·스마트건설 연계...</a></li><li data-title="'쏟아지는 부실, 막히는 출구'…NPL 3.4兆 역대 최대 [fn마켓워치]"><span class="tag news">뉴스</span><a href="https://www.fnnews.com/news/202611270917294396" target="_blank">'쏟아지는 부실, 막히는 출구'…NPL 3.4兆 역대 최대 [fn마켓워치]</a></li><li data-title="돈줄 막힌 홈플러스, 결국 셔터 내린다... 남은 재고 폐기"><span class="tag news">뉴스</span><a href="https://www.insight.co.kr/news/583847" target="_blank">돈줄 막힌 홈플러스, 결국 셔터 내린다... 남은 재고 폐기</a></li><li data-title="거래대금 급감에 추가 긴축까지…증권업계 실적 회복 '산 넘어 산'"><span class="tag news">뉴스</span><a href="https://www.newsway.co.kr/news/view?ud=2026112711324111589" target="_blank">거래대금 급감에 추가 긴축까지…증권업계 실적 회복 '산 넘어 산'</a></li><li data-title="[이재명 직무평가] 지지율 41%...7주째 횡보세"><span class="tag news">뉴스</span><a href="http://www.00news.co.kr/news/articleView.html?idxno=108407" target="_blank">[이재명 직무평가] 지지율 41%...7주째 횡보세</a></li><li data-title="기준금리 연 3.25% 시대…집값 누르고 전·월세 자극할까 [분석+]"><span class="tag news">뉴스</span><a href="https://www.hankyung.com/article/2026112620816" target="_blank">기준금리 연 3.25% 시대…집값 누르고 전·월세 자극할까 [분석+]</a></li><li data-title="유승민 &quot;李 '집팔고 주식사라'더니…재산 날리고 '월세거지' 전락&quot;"><span class="tag news">뉴스</span><a href="https://www.imaeil.com/page/view/2026112713293504416" target="_blank">유승민 "李 '집팔고 주식사라'더니…재산 날리고 '월세거지' 전락"</a></li><li data-title="보험사 대출 2.1조 줄었는데…연체율 15년9개월 만에 최고"><span class="tag news">뉴스</span><a href="http://www.joseilbo.com/news/news_read.php?uid=580600&class=18&grp=" target="_blank">보험사 대출 2.1조 줄었는데…연체율 15년9개월 만에 최고</a></li></ul>
+          </div>
+          <div class="full-view" style="display:none">
+            
+            <div class="dispatch" data-title="부동산과 비트코인 결합…&quot;7~10년 뒤 8000억달러 규모 자산 만들 것&quot;">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">부동산과 비트코인 결합…"7~10년 뒤 8000억달러 규모 자산 만들 것"</p>
+                <p class="d-summary">부동산 현금흐름과 비트코인 가격 상승을 결합해 장기 수익을 노리는 투자 전략이 제시됐다. 비트코인이... 11월 26일(현지시간) 알트코인 데일리 인터뷰에서 부동산 투자자 그랜트 카돈은 부동산과 비트코인을 결합한...</p>
+                <div class="d-meta">네이버뉴스 · 2026-11-27 13:54
+                  <a href="https://www.tokenpost.kr/news/cryptocurrency/445302" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="가계·기업대출 다 줄었는데…보험사 연체율 왜 오르나">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">가계·기업대출 다 줄었는데…보험사 연체율 왜 오르나</p>
+                <p class="d-summary">시장금리 상승과 건설·부동산 경기 부진 여파로 기업의 채무 상환 부담이 커진 영향으로 풀이된다. 27일... 이는 시장금리 상승에 따른 원리금 상환 부담이 커진 데다 건설·부동산 업황 부진으로 관련 기업의 자금...</p>
+                <div class="d-meta">네이버뉴스 · 2026-11-27 13:52
+                  <a href="https://www.mk.co.kr/article/12220087" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="반도체가 흔들리면 금융시장도 흔들린다…F4, 위험 전이 경로 점검">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">반도체가 흔들리면 금융시장도 흔들린다…F4, 위험 전이 경로 점검</p>
+                <p class="d-summary">이형일 부총리 겸 재정경제부 장관은 27일 오전 정부서울청사에서 관계기관 합동 '시장상황점검회의'를 주재하고 국내외 금융·외환시장과 부동산시장 동향, 시장안정조치 이행 상황을 점검했다. 회의에는 신현송 한국은행...</p>
+                <div class="d-meta">네이버뉴스 · 2026-11-27 13:52
+                  <a href="https://www.newsinside.kr/news/articleView.html?idxno=5057955" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="삼천리자산운용, 美 SCM 9억8천만달러 차환⋯위기 딛고 투자 정상화">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">삼천리자산운용, 美 SCM 9억8천만달러 차환⋯위기 딛고 투자 정상화</p>
+                <p class="d-summary">투자 이후 끝까지 책임지는 삼천리자산운용의 운용 원칙을 지켜 나가겠다"고 말했다. 에너지 전문 자산운용사로 출발한 삼천리자산운용은 에너지 인프라, 기업금융, 부동산 등을 중심으로 대체투자 영역을 확대해 왔다.</p>
+                <div class="d-meta">네이버뉴스 · 2026-11-27 13:52
+                  <a href="https://www.autodaily.co.kr/news/articleView.html?idxno=602503" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="[정읍소식]지출 부가세 경정 청구, 환급받아 3억 확보 등">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">[정읍소식]지출 부가세 경정 청구, 환급받아 3억 확보 등</p>
+                <p class="d-summary">전북 정읍시가 지난해 납부한 부가가치세를 면밀히 검토한 뒤 경정청구를 통해 3억원을 환급받았다고 27일 밝혔다, 지방자치단체 사업임에도 민간과의 형평성 때문에 과세대상이었던 부동산 임대업과 숙박업 등 일부...</p>
+                <div class="d-meta">네이버뉴스 · 2026-11-27 13:50
+                  <a href="https://www.newsis.com/view/NISX20261127_0003886208" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="[속보] 李 대통령 지지도 '7주 째 횡보'.. 민주·국힘 좁혀져">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">[속보] 李 대통령 지지도 '7주 째 횡보'.. 민주·국힘 좁혀져</p>
+                <p class="d-summary">부정평가 이유로는 '경제/민생'(22%), '도덕성 문제/본인 재판 회피'(16%), '부동산 정책'(14%) 등이 꼽혔습니다. 정당 지지도 조사에서는 더불어민주당 37%, 국민의힘 30%로, 두 당간의 차이가 7%p차로 좁혀졌습니다. 직전...</p>
+                <div class="d-meta">네이버뉴스 · 2026-11-27 13:48
+                  <a href="http://www.jmbc.co.kr/news/view_breakingnews/70098" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="BNK금융그룹, 자산관리 전문인력 육성으로 WM 경쟁력 강화">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">BNK금융그룹, 자산관리 전문인력 육성으로 WM 경쟁력 강화</p>
+                <p class="d-summary">주요 교육과정은 거시경제 및 금융시장 동향을 비롯해 주식·채권·부동산 투자 전략, 고액자산가 대상 절세 방안, 은퇴 및 연금 설계 등으로 구성됐다. BNK금융그룹은 연수 수료 인력을 향후 PB센터와 자산관리...</p>
+                <div class="d-meta">네이버뉴스 · 2026-11-27 13:48
+                  <a href="https://www.gukjenews.com/news/articleView.html?idxno=3765204" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="삼천리자산운용, 美 가스 인프라 9.8억달러 차환 성공">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">삼천리자산운용, 美 가스 인프라 9.8억달러 차환 성공</p>
+                <p class="d-summary">끝까지 책임지는 삼천리자산운용의 운용 원칙을 지켜 나가겠다"고 말했다. 한편 에너지 전문 자산운용사로 출발한 삼천리자산운용은 에너지 인프라와 기업금융, 부동산 등을 중심으로 대체투자 영역을 확대하고 있다.</p>
+                <div class="d-meta">네이버뉴스 · 2026-11-27 13:48
+                  <a href="http://www.hansbiz.co.kr/news/articleView.html?idxno=888001" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="李대통령 국정지지율 41%로 7주째 횡보···부정평가는 50%[한국갤럽]">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">李대통령 국정지지율 41%로 7주째 횡보···부정평가는 50%[한국갤럽]</p>
+                <p class="d-summary">부정 평가 이유로는 경제·민생(22%), 도덕성 문제 및 본인 재판 회피(16%), 부동산 정책(14%) 등의 순이었다. 이 대통령의 지지율을 지역별로 보면 서울에서 긍정 평가가 전주 34%에서 41%로 7%p 올라 가장 큰 상승 폭을...</p>
+                <div class="d-meta">네이버뉴스 · 2026-11-27 13:46
+                  <a href="https://www.smartbizn.com/news/articleView.html?idxno=160857" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="한국부동산원, 건설사 4곳과 ‘2027년 온실가스 감축 협약’">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">한국부동산원, 건설사 4곳과 ‘2027년 온실가스 감축 협약’</p>
+                <p class="d-summary">한국부동산원은 27일 온실가스 목표관리 업체인 SK에코플랜트·IPARK현산·DL건설·태영건설 등 건설사 4곳과... 한국부동산원은 국토교통부로부터 실무 대행 기관으로 지정받아 2016년부터 건설업 부문 관리업체를 대상으로...</p>
+                <div class="d-meta">네이버뉴스 · 2026-11-27 13:44
+                  <a href="https://biz.heraldcorp.com/article/10951821?ref=naver" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="[오늘 뭐했니?] 한국부동산원">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">[오늘 뭐했니?] 한국부동산원</p>
+                <p class="d-summary">한국부동산원이 건설업 부문 온실가스 감축을 위해 SK에코플랜트·IPARK현대산업개발·DL건설·태영건설 등과... 한국부동산원 이정환 본부장, SK에코플랜트 황인실 팀장, DL건설 나경현 부장이 '2027년도 온실가스 감축...</p>
+                <div class="d-meta">네이버뉴스 · 2026-11-27 13:44
+                  <a href="http://www.financialreview.co.kr/news/articleView.html?idxno=46660" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="홈플러스 정상화 기다리는 상인들…기약 없는 휴업에 '한숨'">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">홈플러스 정상화 기다리는 상인들…기약 없는 휴업에 '한숨'</p>
+                <p class="d-summary">한편 부동산 개발업체와 유통업체에 따르면 한 컨소시엄이 홈플러스 전체 인수를 희망하는 인수의향서(LOI)를 제출했다. 다만 실제 인수 성사 여부는 여전히 불투명한 상황이다. 홈플러스는 인수합병(M&A)을 통한 경영...</p>
+                <div class="d-meta">네이버뉴스 · 2026-11-27 13:44
+                  <a href="https://www.jnilbo.com/news/articleView.html?idxno=90000087296" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="종부세 6조 원 고지…12월 15일 마감">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">종부세 6조 원 고지…12월 15일 마감</p>
+                <p class="d-summary">올해 종합부동산세(이하 종부세) 납부 기간은 오는 12월 1일부터 15일까지다. 27일 오후 1시 기준 국세청이... 종부세는 6월 1일 현재 개인별로 보유한 부동산의 공시가격을 유형별로 합산해 공제액을 초과하면...</p>
+                <div class="d-meta">네이버뉴스 · 2026-11-27 13:42
+                  <a href="https://www.topstarnews.net/news/articleView.html?idxno=16287813" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="팔려던 ‘알짜’ 계속 품고 간다…한화갤러리아, 타임월드 ‘재도약’...">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">팔려던 ‘알짜’ 계속 품고 간다…한화갤러리아, 타임월드 ‘재도약’...</p>
+                <p class="d-summary">당시에는 백화점 사업 재편보다는 보유 부동산을 유동화해 현금을 확보하고 재무구조를 개선하려는 목적이었다. 다만 원매자와 가격 등 매각 조건을 두고 의견 차가 커 무산됐다. 이후 5년 만인 올해 다시 매각에...</p>
+                <div class="d-meta">네이버뉴스 · 2026-11-27 13:42
+                  <a href="https://www.fntimes.com/html/view.php?ud=2026112713091193b5b890e35c_18" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="BNK금융, 자산관리 전문인력 육성">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">BNK금융, 자산관리 전문인력 육성</p>
+                <p class="d-summary">2주간 진행되는 이번 연수는 금융시장에 대한 이해와 현장 실무역량을 높이는 데 중점을 두고 거시경제 및 금융시장 동향 분석, 주식·채권·부동산 투자 전략, 고액자산가 대상 절세 전략, 은퇴 및 연금 설계 등으로...</p>
+                <div class="d-meta">네이버뉴스 · 2026-11-27 13:40
+                  <a href="https://www.fnnews.com/news/202611271335157153" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="‘외교 호평’ vs ‘민생·재판 발목’…李대통령 지지율 41%·부정 50% 7...">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">‘외교 호평’ vs ‘민생·재판 발목’…李대통령 지지율 41%·부정 50% 7...</p>
+                <p class="d-summary">반면 부정 평가 이유에서는 ‘경제·민생’(22%)이 1위로 꼽혔으며, ‘도덕성 문제·본인 재판 회피’(16%)와 ‘부동산 정책’(14%)이 두 자릿수를 기록했다. 이어 ‘전반적으로 잘못한다’(5%), ‘인사’(5%), ‘외교’(3...</p>
+                <div class="d-meta">네이버뉴스 · 2026-11-27 13:40
+                  <a href="https://www.dt.co.kr/article/12097596?ref=naver" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="검찰미래위, 이번 주에도 李 연루 '위례 사건' 결론 못 내(종합)">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">검찰미래위, 이번 주에도 李 연루 '위례 사건' 결론 못 내(종합)</p>
+                <p class="d-summary">통계 조작 사건의 핵심 의혹은 문재인 정부 인사들이 부동산·소득·고용 등 주요 국가 통계를 조작했다는 것이다. 김수현·김상조 전 청와대 정책실장과 김현미 전 국토교통부 장관 등 11명이 2024년 3월 통계법 위반과...</p>
+                <div class="d-meta">네이버뉴스 · 2026-11-27 13:39
+                  <a href="https://www.news1.kr/society/court-prosecution/6368332" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="SK하닉으로 '2억→100억' 만든 95년생…&quot;5월에 싹 팔고 50억 용산집 샀다...">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">SK하닉으로 '2억→100억' 만든 95년생…"5월에 싹 팔고 50억 용산집 샀다...</p>
+                <p class="d-summary">A씨는 "어렸을 때부터 집이 좀 힘들다 보니까 집이 없어서 이사를 되게 많이 다녔다"며 "부모님 집도 빨리 해 드리고 싶고 저도 집이 있으면 좋겠다고 생각해서 집을 사게 됐다"고 부동산 매수 이유를 밝혔다. 그는...</p>
+                <div class="d-meta">네이버뉴스 · 2026-11-27 13:38
+                  <a href="https://www.fnnews.com/news/202611271115015886" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="지역 대표 '자산관리 명가' 도약 속도낸다…BNK금융그룹, 예비 WM 전문인...">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">지역 대표 '자산관리 명가' 도약 속도낸다…BNK금융그룹, 예비 WM 전문인...</p>
+                <p class="d-summary">세부 커리큘럼은 거시경제 및 금융시장 동향 분석을 비롯해 주식·채권·부동산 통합 투자 전략과 고액자산가 대상 맞춤형 절세 전략 그리고 은퇴 및 연금 설계 등 핵심 자산관리 영역 전반을 아우르는 실전 과정으로...</p>
+                <div class="d-meta">네이버뉴스 · 2026-11-27 13:38
+                  <a href="https://www.thefairnews.co.kr/news/articleView.html?idxno=95788" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="BNK금융그룹, WM 전문인력 육성 돌입…그룹 공동 연수 개최">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">BNK금융그룹, WM 전문인력 육성 돌입…그룹 공동 연수 개최</p>
+                <p class="d-summary">세부 커리큘럼은 거시경제 및 금융시장 동향 분석을 비롯해 주식·채권·부동산 투자 전략, 고액자산가 맞춤형 절세 방안, 은퇴 및 연금 설계 등으로 짜였다. BNK금융그룹은 과정을 마친 직원들을 향후 프라이빗뱅킹(PB)...</p>
+                <div class="d-meta">네이버뉴스 · 2026-11-27 13:38
+                  <a href="http://www.newsdream.kr/news/articleView.html?idxno=123206" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="강남구, 은마아파트 재건축부담금 관련 설명 자료 내놔">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">강남구, 은마아파트 재건축부담금 관련 설명 자료 내놔</p>
+                <p class="d-summary">한국부동산원이 검증하고, 그 결과를 조합에 알린 '예정액' 통지로, 부담금을 납부하라는 부과·고지(청구)... 2020년 '부동산 공시가격 현실화 계획'의 목표 현실화율 90%를 적용하여 산정했다고 구는 설명했다.. 정부는...</p>
+                <div class="d-meta">네이버뉴스 · 2026-11-27 13:36
+                  <a href="https://www.cnbizm.com/news/articleView.html?idxno=322947" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="지역 첫 브랜드부터 강남 대단지까지… 연말 분양 눈길">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">지역 첫 브랜드부터 강남 대단지까지… 연말 분양 눈길</p>
+                <p class="d-summary">부동산 전문 리서치업체 리얼투데이 관계자는 "상징성과 희소성을 갖춘 단지는 지역 내 인지도가 높고 입주 이후에도 차별화된 경쟁력을 유지할 수 있다"라며 "연내 내 집 마련이나 갈아타기를 고려하는 수요자라면...</p>
+                <div class="d-meta">네이버뉴스 · 2026-11-27 13:36
+                  <a href="https://www.mediafine.co.kr/news/articleView.html?idxno=96078" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="롯데건설, 3조원대 베트남 복합개발 본격화…지분투자·스마트건설 연계...">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">롯데건설, 3조원대 베트남 복합개발 본격화…지분투자·스마트건설 연계...</p>
+                <p class="d-summary">베트남 부동산 개발기업 팟닷과 함께 호찌민시 투티엠 신도시에서 대규모 복합개발사업인 '롯데... 올해 3분기 말 부채비율은 166.3%로 지난해 말 대비 20.4%포인트 낮아졌으며 부동산 프로젝트파이낸싱 우발채무는 약...</p>
+                <div class="d-meta">네이버뉴스 · 2026-11-27 13:36
+                  <a href="https://www.upkoreanews.kr/news/articleView.html?idxno=101399" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="'쏟아지는 부실, 막히는 출구'…NPL 3.4兆 역대 최대 [fn마켓워치]">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">'쏟아지는 부실, 막히는 출구'…NPL 3.4兆 역대 최대 [fn마켓워치]</p>
+                <p class="d-summary">과거 NPL 투자사들의 선호 자산이었던 요양병원마저 병상 규제에 발목이 잡힌 데다 상업용 부동산에... IB업계 관계자는 "이번 분기에는 지식산업센터 비중이 줄어든 반면 상가 등 상업용 부동산 비중이 역대급...</p>
+                <div class="d-meta">네이버뉴스 · 2026-11-27 13:34
+                  <a href="https://www.fnnews.com/news/202611270917294396" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="돈줄 막힌 홈플러스, 결국 셔터 내린다... 남은 재고 폐기">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">돈줄 막힌 홈플러스, 결국 셔터 내린다... 남은 재고 폐기</p>
+                <p class="d-summary">부동산 개발업체와 유통업체가 손잡은 컨소시엄으로, 일부 점포의 개발과 대형마트 사업 지속을 함께 추진하는 방안을 제시한 것으로 알려졌다.다만 인수의향서 제출은 초기 단계로 법적 구속력이 없다. 실제 매각을...</p>
+                <div class="d-meta">네이버뉴스 · 2026-11-27 13:34
+                  <a href="https://www.insight.co.kr/news/583847" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="거래대금 급감에 추가 긴축까지…증권업계 실적 회복 '산 넘어 산'">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">거래대금 급감에 추가 긴축까지…증권업계 실적 회복 '산 넘어 산'</p>
+                <p class="d-summary">부동산 프로젝트파이낸싱(PF) 부실 사업장 정리가 마무리되지 않은 상황에서 고금리가 장기화하면 기업여신의 건전성도 악화할 수 있다는 우려가 나온다. 특히 금리 상승으로 담보가치가 하락하고 기업공개(IPO)와...</p>
+                <div class="d-meta">네이버뉴스 · 2026-11-27 13:34
+                  <a href="https://www.newsway.co.kr/news/view?ud=2026112711324111589" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="[이재명 직무평가] 지지율 41%...7주째 횡보세">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">[이재명 직무평가] 지지율 41%...7주째 횡보세</p>
+                <p class="d-summary">직무 수행 부정 평가자는 '경제·민생'(22%), '도덕성 문제·본인 재판 회피'(16%), '부동산 정책'(14%), '전반적으로 잘못한다', '인사(人事)'(이상 5%), '외교', '독재·독단'(이상 3%) 등을 이유로 들었다. 정당 지지도는...</p>
+                <div class="d-meta">네이버뉴스 · 2026-11-27 13:32
+                  <a href="http://www.00news.co.kr/news/articleView.html?idxno=108407" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="기준금리 연 3.25% 시대…집값 누르고 전·월세 자극할까 [분석+]">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">기준금리 연 3.25% 시대…집값 누르고 전·월세 자극할까 [분석+]</p>
+                <p class="d-summary">함영진 우리은행 부동산리서치랩장은 "매도자는 가격을 쉽게 낮추지 않지만 매수자는 금융비용 상승을... 김효선 KB국민은행 WM스타자문단 부동산 전문위원은 "전세대출 금리 상승에 따른 월세 전환 수요 증가와 임대인의...</p>
+                <div class="d-meta">네이버뉴스 · 2026-11-27 13:31
+                  <a href="https://www.hankyung.com/article/2026112620816" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="유승민 &quot;李 '집팔고 주식사라'더니…재산 날리고 '월세거지' 전락&quot;">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">유승민 "李 '집팔고 주식사라'더니…재산 날리고 '월세거지' 전락"</p>
+                <p class="d-summary">확실히 밀어드리겠다", "국장 투자의 매력을 높여 부동산 자금을 주식으로 이전하는 흐름을 가속할 것", "코스피 1만 시대", "2-3년내 한국이 글로벌 시가총액 3위에 오를 것. 내기 하자" 등을 언급했다. 그러면서 "국민...</p>
+                <div class="d-meta">네이버뉴스 · 2026-11-27 13:31
+                  <a href="https://www.imaeil.com/page/view/2026112713293504416" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dispatch" data-title="보험사 대출 2.1조 줄었는데…연체율 15년9개월 만에 최고">
+              <div class="stamp news">뉴스</div>
+              <div class="d-body">
+                <p class="d-title">보험사 대출 2.1조 줄었는데…연체율 15년9개월 만에 최고</p>
+                <p class="d-summary">금감원은 금리 상승과 건설·부동산 경기 부진을 건전성 악화 배경으로 꼽았다. 보험사에 대손충당금을 충분히 쌓고 연체채권의 상각·매각을 서두르도록 지도할 방침이다. 연체채권 정리가 연말에 집중되는...</p>
+                <div class="d-meta">네이버뉴스 · 2026-11-27 13:31
+                  <a href="http://www.joseilbo.com/news/news_read.php?uid=580600&class=18&grp=" target="_blank">원문 보기</a>
+                </div>
+              </div>
+            </div>
+            
+            <p class="empty">오늘 수집된 공시가 없습니다.</p>
+          </div>
+        </div>
+        
+  <div class="archive">
+    <a class="today-link" href="/daily-briefing/index.html">오늘 리포트로 돌아가기</a>
+    &nbsp;|&nbsp;
+    <label for="dateSelect">다른 날짜 선택: </label>
+    <select id="dateSelect" onchange="if(this.value) window.location.href = this.value;">
+      <option value="/daily-briefing/index.html">오늘 · 2026-11-27</option><option value="/daily-briefing/archive/2026-11-26.html">2026-11-26</option><option value="/daily-briefing/archive/2026-11-25.html">2026-11-25</option><option value="/daily-briefing/archive/2026-11-24.html">2026-11-24</option><option value="/daily-briefing/archive/2026-11-23.html">2026-11-23</option><option value="/daily-briefing/archive/2026-11-22.html">2026-11-22</option><option value="/daily-briefing/archive/2026-11-21.html">2026-11-21</option><option value="/daily-briefing/archive/2026-11-20.html">2026-11-20</option><option value="/daily-briefing/archive/2026-11-19.html">2026-11-19</option><option value="/daily-briefing/archive/2026-11-18.html">2026-11-18</option><option value="/daily-briefing/archive/2026-11-17.html">2026-11-17</option><option value="/daily-briefing/archive/2026-11-16.html">2026-11-16</option><option value="/daily-briefing/archive/2026-11-15.html">2026-11-15</option><option value="/daily-briefing/archive/2026-11-14.html">2026-11-14</option><option value="/daily-briefing/archive/2026-11-13.html">2026-11-13</option><option value="/daily-briefing/archive/2026-11-12.html">2026-11-12</option><option value="/daily-briefing/archive/2026-11-11.html">2026-11-11</option><option value="/daily-briefing/archive/2026-11-10.html">2026-11-10</option><option value="/daily-briefing/archive/2026-11-09.html">2026-11-09</option><option value="/daily-briefing/archive/2026-11-08.html">2026-11-08</option><option value="/daily-briefing/archive/2026-11-07.html">2026-11-07</option><option value="/daily-briefing/archive/2026-11-06.html">2026-11-06</option><option value="/daily-briefing/archive/2026-11-05.html">2026-11-05</option><option value="/daily-briefing/archive/2026-11-04.html">2026-11-04</option><option value="/daily-briefing/archive/2026-11-03.html">2026-11-03</option><option value="/daily-briefing/archive/2026-11-02.html">2026-11-02</option><option value="/daily-briefing/archive/2026-11-01.html">2026-11-01</option><option value="/daily-briefing/archive/2026-10-31.html">2026-10-31</option><option value="/daily-briefing/archive/2026-10-30.html">2026-10-30</option><option value="/daily-briefing/archive/2026-10-29.html">2026-10-29</option><option value="/daily-briefing/archive/2026-10-28.html">2026-10-28</option><option value="/daily-briefing/archive/2026-10-27.html">2026-10-27</option><option value="/daily-briefing/archive/2026-10-26.html">2026-10-26</option><option value="/daily-briefing/archive/2026-10-25.html">2026-10-25</option><option value="/daily-briefing/archive/2026-10-24.html">2026-10-24</option><option value="/daily-briefing/archive/2026-10-23.html">2026-10-23</option><option value="/daily-briefing/archive/2026-10-22.html">2026-10-22</option><option value="/daily-briefing/archive/2026-10-21.html">2026-10-21</option><option value="/daily-briefing/archive/2026-10-20.html">2026-10-20</option><option value="/daily-briefing/archive/2026-10-19.html">2026-10-19</option><option value="/daily-briefing/archive/2026-10-18.html">2026-10-18</option><option value="/daily-briefing/archive/2026-10-17.html">2026-10-17</option><option value="/daily-briefing/archive/2026-10-16.html">2026-10-16</option><option value="/daily-briefing/archive/2026-10-15.html">2026-10-15</option><option value="/daily-briefing/archive/2026-10-14.html">2026-10-14</option><option value="/daily-briefing/archive/2026-10-13.html">2026-10-13</option><option value="/daily-briefing/archive/2026-10-12.html">2026-10-12</option><option value="/daily-briefing/archive/2026-10-11.html">2026-10-11</option><option value="/daily-briefing/archive/2026-10-10.html">2026-10-10</option><option value="/daily-briefing/archive/2026-10-09.html">2026-10-09</option><option value="/daily-briefing/archive/2026-10-08.html">2026-10-08</option><option value="/daily-briefing/archive/2026-10-07.html">2026-10-07</option><option value="/daily-briefing/archive/2026-10-06.html">2026-10-06</option><option value="/daily-briefing/archive/2026-10-05.html">2026-10-05</option><option value="/daily-briefing/archive/2026-10-04.html">2026-10-04</option><option value="/daily-briefing/archive/2026-10-03.html">2026-10-03</option><option value="/daily-briefing/archive/2026-10-02.html">2026-10-02</option><option value="/daily-briefing/archive/2026-10-01.html">2026-10-01</option><option value="/daily-briefing/archive/2026-09-30.html">2026-09-30</option><option value="/daily-briefing/archive/2026-09-29.html">2026-09-29</option><option value="/daily-briefing/archive/2026-09-28.html">2026-09-28</option><option value="/daily-briefing/archive/2026-09-27.html">2026-09-27</option><option value="/daily-briefing/archive/2026-09-26.html">2026-09-26</option><option value="/daily-briefing/archive/2026-09-25.html">2026-09-25</option><option value="/daily-briefing/archive/2026-09-24.html">2026-09-24</option><option value="/daily-briefing/archive/2026-09-23.html">2026-09-23</option><option value="/daily-briefing/archive/2026-09-22.html">2026-09-22</option><option value="/daily-briefing/archive/2026-09-21.html">2026-09-21</option><option value="/daily-briefing/archive/2026-09-20.html">2026-09-20</option><option value="/daily-briefing/archive/2026-09-19.html">2026-09-19</option><option value="/daily-briefing/archive/2026-09-18.html">2026-09-18</option><option value="/daily-briefing/archive/2026-09-17.html">2026-09-17</option><option value="/daily-briefing/archive/2026-09-16.html">2026-09-16</option><option value="/daily-briefing/archive/2026-09-15.html">2026-09-15</option><option value="/daily-briefing/archive/2026-09-14.html">2026-09-14</option><option value="/daily-briefing/archive/2026-09-13.html">2026-09-13</option><option value="/daily-briefing/archive/2026-09-12.html">2026-09-12</option><option value="/daily-briefing/archive/2026-09-11.html">2026-09-11</option><option value="/daily-briefing/archive/2026-09-10.html">2026-09-10</option><option value="/daily-briefing/archive/2026-09-09.html">2026-09-09</option><option value="/daily-briefing/archive/2026-09-08.html">2026-09-08</option><option value="/daily-briefing/archive/2026-09-07.html">2026-09-07</option><option value="/daily-briefing/archive/2026-09-06.html">2026-09-06</option><option value="/daily-briefing/archive/2026-09-05.html">2026-09-05</option><option value="/daily-briefing/archive/2026-09-04.html">2026-09-04</option><option value="/daily-briefing/archive/2026-09-03.html">2026-09-03</option><option value="/daily-briefing/archive/2026-09-02.html">2026-09-02</option><option value="/daily-briefing/archive/2026-09-01.html">2026-09-01</option><option value="/daily-briefing/archive/2026-08-31.html">2026-08-31</option><option value="/daily-briefing/archive/2026-08-30.html">2026-08-30</option><option value="/daily-briefing/archive/2026-08-29.html">2026-08-29</option><option value="/daily-briefing/archive/2026-08-28.html">2026-08-28</option><option value="/daily-briefing/archive/2026-08-27.html">2026-08-27</option><option value="/daily-briefing/archive/2026-08-26.html">2026-08-26</option><option value="/daily-briefing/archive/2026-08-25.html">2026-08-25</option><option value="/daily-briefing/archive/2026-08-24.html">2026-08-24</option><option value="/daily-briefing/archive/2026-08-23.html">2026-08-23</option><option value="/daily-briefing/archive/2026-08-22.html">2026-08-22</option><option value="/daily-briefing/archive/2026-08-21.html">2026-08-21</option><option value="/daily-briefing/archive/2026-08-20.html">2026-08-20</option><option value="/daily-briefing/archive/2026-08-19.html">2026-08-19</option><option value="/daily-briefing/archive/2026-08-18.html">2026-08-18</option><option value="/daily-briefing/archive/2026-08-17.html">2026-08-17</option><option value="/daily-briefing/archive/2026-08-16.html">2026-08-16</option><option value="/daily-briefing/archive/2026-08-15.html">2026-08-15</option><option value="/daily-briefing/archive/2026-08-14.html">2026-08-14</option><option value="/daily-briefing/archive/2026-08-13.html">2026-08-13</option><option value="/daily-briefing/archive/2026-08-12.html">2026-08-12</option><option value="/daily-briefing/archive/2026-08-11.html">2026-08-11</option><option value="/daily-briefing/archive/2026-08-10.html">2026-08-10</option><option value="/daily-briefing/archive/2026-08-09.html">2026-08-09</option><option value="/daily-briefing/archive/2026-08-08.html">2026-08-08</option><option value="/daily-briefing/archive/2026-08-07.html">2026-08-07</option><option value="/daily-briefing/archive/2026-08-06.html">2026-08-06</option><option value="/daily-briefing/archive/2026-08-05.html">2026-08-05</option><option value="/daily-briefing/archive/2026-08-04.html">2026-08-04</option><option value="/daily-briefing/archive/2026-08-03.html">2026-08-03</option><option value="/daily-briefing/archive/2026-08-02.html">2026-08-02</option><option value="/daily-briefing/archive/2026-08-01.html">2026-08-01</option><option value="/daily-briefing/archive/2026-07-31.html">2026-07-31</option><option value="/daily-briefing/archive/2026-07-30.html">2026-07-30</option><option value="/daily-briefing/archive/2026-07-29.html">2026-07-29</option><option value="/daily-briefing/archive/2026-07-28.html">2026-07-28</option><option value="/daily-briefing/archive/2026-07-27.html">2026-07-27</option><option value="/daily-briefing/archive/2026-07-26.html">2026-07-26</option><option value="/daily-briefing/archive/2026-07-25.html">2026-07-25</option><option value="/daily-briefing/archive/2026-07-24.html">2026-07-24</option><option value="/daily-briefing/archive/2026-07-23.html">2026-07-23</option><option value="/daily-briefing/archive/2026-07-22.html">2026-07-22</option><option value="/daily-briefing/archive/2026-07-21.html">2026-07-21</option><option value="/daily-briefing/archive/2026-07-20.html">2026-07-20</option><option value="/daily-briefing/archive/2026-07-19.html">2026-07-19</option><option value="/daily-briefing/archive/2026-07-18.html">2026-07-18</option><option value="/daily-briefing/archive/2026-07-17.html">2026-07-17</option><option value="/daily-briefing/archive/2026-07-16.html">2026-07-16</option><option value="/daily-briefing/archive/2026-07-15.html">2026-07-15</option><option value="/daily-briefing/archive/2026-07-14.html">2026-07-14</option><option value="/daily-briefing/archive/2026-07-13.html">2026-07-13</option><option value="/daily-briefing/archive/2026-07-12.html">2026-07-12</option><option value="/daily-briefing/archive/2026-07-11.html">2026-07-11</option><option value="/daily-briefing/archive/2026-07-10.html">2026-07-10</option><option value="/daily-briefing/archive/2026-07-09.html">2026-07-09</option><option value="/daily-briefing/archive/2026-07-08.html">2026-07-08</option><option value="/daily-briefing/archive/2026-07-07.html">2026-07-07</option>
+    </select>
+  </div>
+</div>
+<script>
+function showTab(kw) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.kw === kw));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.dataset.kw === kw));
+  document.getElementById('search').value = '';
+  filterItems();
+}
+function showView(kw, view) {
+  const panel = document.querySelector('.tab-panel[data-kw="' + kw + '"]');
+  panel.querySelectorAll('.view-toggle button').forEach(b => b.classList.toggle('active', b.dataset.view === view));
+  panel.querySelector('.summary-view').style.display = view === 'summary' ? 'block' : 'none';
+  panel.querySelector('.full-view').style.display = view === 'full' ? 'block' : 'none';
+  panel.querySelector('.report-view').style.display = view === 'report' ? 'block' : 'none';
+}
+function filterItems() {
+  const q = document.getElementById('search').value.trim().toLowerCase();
+  document.querySelectorAll('.tab-panel.active [data-title]').forEach(el => {
+    const match = el.dataset.title.toLowerCase().includes(q);
+    el.style.display = match ? '' : 'none';
+  });
+}
+function requestKeyword(action) {
+  const kw = document.getElementById('kw-input').value.trim();
+  if (!kw) { alert('키워드를 입력해주세요.'); return; }
+  const title = encodeURIComponent(action + ': ' + kw);
+  const url = 'https://github.com/dhur3/daily-briefing/issues/new?title=' + title;
+  window.open(url, '_blank');
+}
+</script>
+</body>
+</html>
